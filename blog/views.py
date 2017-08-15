@@ -49,7 +49,7 @@ def post_grid(request):
             Q(content__icontains=query) |
             Q(user__first_name__icontains=query) |
             Q(user__last_name__icontains=query)).distinct()
-    paginator = Paginator(queryset_list, 2)
+    paginator = Paginator(queryset_list, 7)
     pnumb = paginator.page_range
     page_request_var = "p"
     page = request.GET.get(page_request_var)
