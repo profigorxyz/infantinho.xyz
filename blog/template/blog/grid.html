@@ -1,0 +1,44 @@
+{% block head_extra %}
+{% load staticfiles %}
+    <style>
+    #view-source {
+      position: fixed;
+      display: block;
+      right: 0;
+      bottom: 0;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      z-index: 900;
+    }
+    </style>
+{% endblock head_extra %}
+{% block content %}
+    <div class="mdl-layout mdl-js-layout has-drawer is-upgraded">
+      <main class="mdl-layout__content">
+        <div class="mdl-grid">
+          {% for obj in object_list %}
+            <style>
+              .{{ obj.slug  }} {
+                background-image: url('{{ obj.headimage.medium.url }}');
+                }
+            </style>
+            <div class="mdl-card {{ obj.slug }} mdl-cell mdl-cell--8-col">
+
+              <div class="mdl-card__media mdl-color-text--grey-50">
+                <h3><a href="{{ obj.get_absolute_url }}">{{ obj.title|upper }}</a></h3>
+              </div>
+              <div class="mdl-color-text--grey-600 mdl-card__supporting-text">
+                {{ obj.content|striptags|safe|truncatechars_html:100 }}
+              </div>
+              <div class="mdl-card__supporting-text meta mdl-color-text--grey-600">
+                <div>
+                <strong>{{ obj.user.first_name }} {{ obj.user.last_name }}</strong>
+                <span>há {{ obj.publish|timesince }}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </main>
+    </div>
+{% endblock content %}

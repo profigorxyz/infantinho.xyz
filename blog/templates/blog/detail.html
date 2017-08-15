@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+      {% block content %}
+      {% load staticfiles %}
+        <!-- blog section start -->
+        <section class="blog-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="posts-content single-post">
+
+                        <article class="post-wrapper">
+
+
+                          <div class="thumb-wrapper">
+                            <img src="{{ instance.headimage.url }}" class="img-responsive" alt="" >
+
+                            <div class="entry-header">
+                              <span class="posted-in">
+                                <a href="#">{{ instance.tag }}</a>
+                              </span>
+
+                              <h2 class="entry-title">{{ instance.title }}</h2>
+
+                            </div><!-- .entry-header -->
+
+                            <div class="author-thumb waves-effect waves-light">
+                              <a href="#"><img src="{% static '400x400_icone.png' %}" alt=""></a>
+                            </div>
+
+                              <div class="entry-meta">
+                                  <ul class="list-inline">
+                                      <li>
+                                          <i class="fa fa-user"></i><a href="mailto:{{ instance.user.email }}">{% if instance.user.get_full_name %}{{ instance.user.get_full_name }}{% else %} {{ instance.user }} {% endif %}</a>
+                                      </li>
+
+                                      <li>
+                                          <i class="fa fa-clock-o"></i><a href="#">{{ instance.publish }}</a>
+                                      </li>
+
+                                      <li>
+                                          <i class="fa fa-heart-o"></i><a href="#"><span>1</span></a> <!-- need to build logic to read likes -->
+                                      </li>
+
+                                      <li>
+                                          <i class="fa fa-comment-o"></i><a href="#">3</a> <!-- need to build logic to get comments -->
+                                      </li>
+                                  </ul>
+                              </div><!-- .entry-meta -->
+
+                          </div><!-- .post-thumb -->
+
+
+                          <div class="entry-content">
+                            {{ instance.content|safe }}
+                          </div><!-- .entry-content -->
+
+
+                          <footer class="entry-footer">
+                            <div class="post-tags">
+                              <span class="tags-links">
+                                <i class="fa fa-tags"></i><a href="#">{{ instance.tag }}</a>
+                              </span>
+                            </div> <!-- .post-tags -->
+
+                            <ul class="list-inline right share-post">
+
+                                <li><a target="_blank" href="https://www.facebook.com/dialog/share?app_id=1694858034111220&display=popup&href={{ request.build_absolute_uri }}&redirect_uri={{ 'https://www.facebook.com/profile.php?id=100012729397614'|iriencode }}" class='shareBtn'><i class="fa fa-facebook"></i> <span>Partilha</span></a>
+                                </li>
+                                <li><a target="_blank" href="https://twitter.com/intent/tweet?text={{ instance.title|safe }}&via=ProfIgorAlmeida&url={{ request.build_absolute_uri }}"><i class="fa fa-twitter"></i> <span>Tweet</span></a>
+                                </li>
+                            </ul>
+                          </footer>
+                              <script>
+                              document.getElementById('shareBtn').onclick = function() {
+                                FB.ui({
+                                  method: 'share',
+                                  mobile_iframe: true,
+                                  href: '{{ request.build_absolute_uri }}',
+                                }, function(response){});
+                              }
+                              </script>
+                        </article><!-- /.post-wrapper -->
+
+
+
+                        <!-- Need to implement comments -->
+
+                      </div><!-- /.posts-content -->
+                    </div><!-- /.col-md-12 -->
+
+                  </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section>
+        <!-- blog section end -->
+{% endblock content %}

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="infantinho" content="Portal pedagógico dos alunos do pré-escolar e do 1.º Ciclo do Colégio Infante D. Henrique">
+        <meta name="keywords" content="portal pedagógico, infantinho, escola, colégio, pedagogia, pedagogia ativa, 1.º ciclo, projetos, aprendizagem por projetos, planos de trabalho">
+        <meta name="author" content="prof.igor@colegioinfante.info">
+
+        <title>infantinho.xyz</title>
+
+        {% load staticfiles %}
+        <!--  favicons -->
+        <link rel="apple-touch-icon" sizes="57x57" href="{% static 'favicons/apple-icon-57x57.png' %}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{% static 'favicons/apple-icon-60x60.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'favicons/apple-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'favicons/apple-icon-76x76.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'favicons/apple-icon-114x114.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'favicons/apple-icon-120x120.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'favicons/apple-icon-144x144.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'favicons/apple-icon-152x152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-icon-180x180.png' %}">
+        <link rel="icon" type="image/png" sizes="192x192"  href="{% static 'favicons/android-icon-192x192.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicons/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static 'favicons/favicon-96x96.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicons/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'favicons/manifest.json' %}">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="{% static 'favicons/ms-icon-144x144.png' %}">
+        <meta name="theme-color" content="#ffffff">
+        <!-- google fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500,700,900' rel='stylesheet' type='text/css'>
+        <!-- Material Icons CSS -->
+        <link href="{% static 'assets/fonts/iconfont/material-icons.css' %}" rel="stylesheet">
+        <!-- FontAwesome CSS -->
+        <link href="{% static 'assets/fonts/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+        <!-- owl.carousel -->
+        <link href="{% static 'assets/owl.carousel/assets/owl.carousel.css' %}" rel="stylesheet">
+        <link href="{% static 'assets/owl.carousel/assets/owl.theme.default.min.css' %}" rel="stylesheet">
+        <!-- materialize -->
+        <link href="{% static 'assets/materialize/css/materialize.min.css' %}" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- shortcodes -->
+        <link href="{% static 'assets/css/shortcodes/shortcodes.css' %}" rel="stylesheet">
+        <!-- Style CSS -->
+        <link href="{% static 'style.css' %}" rel="stylesheet">
+        <!-- RS5.0 Main Stylesheet -->
+        <link rel="stylesheet" type="text/css" href="{% static 'assets/revolution/css/settings.css' %}">
+        <!-- RS5.0 Layers and Navigation Styles -->
+        <link rel="stylesheet" type="text/css" href="{% static 'assets/revolution/css/layers.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'assets/revolution/css/navigation.css' %}">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body id="top" class="has-header-search">
+        <!--header start-->
+        <header id="header" class="tt-nav transparent-header">
+            <div class="header-sticky light-header">
+                <div class="container">
+                    <div id="materialize-menu" class="menuzord">
+
+                        <!--logo start-->
+                        <a href="" class="logo-brand">
+                            <img class="logo-dark" src="{% static 'slogo_azul.png' %}" height="50" width="200" alt=""/>
+                            <img class="logo-light" src="{% static 'slogo_branco.png' %}" height="50" width="200" alt=""/>
+                        </a>
+                        <!--logo end-->
+
+                        <!--mega menu start-->
+                        <ul class="menuzord-menu pull-right light">
+                            <li><a href="javascript:void(0)">Blogue</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Ver Mensagens</a>
+                                    </li>
+                                    <li><a href="#">Criar Mensagem</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)">Registos</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Presenças</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Marcar Presenças</a>
+                                            </li>
+                                            <li><a href="#">Verificar Presenças</a>
+                                            </li>
+                                            <li><a href="#">Imprimir Presenças</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Listas de Verificação</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Português</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">Oralidade</a></li>
+                                                    <li><a href="">Leitura e Escrita</a></li>
+                                                    <li><a href="">Educação Literária</a></li>
+                                                    <li><a href="">Gramática</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Matemática</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">Números e Operações</a></li>
+                                                    <li><a href="">Geometria e Medida</a></li>
+                                                    <li><a href="">Organização e Tratamento de Dados</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Estudo do Meio</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">À Descoberta de Si Mesmo</a></li>
+                                                    <li><a href="">À Descoberta dos Outros e das Instituições</a></li>
+                                                    <li><a href="">À Descoberta do Ambiente Natural</a></li>
+                                                    <li><a href="">À Descoberta das Inter-relações entre Espaços</a></li>
+                                                    <li><a href="">À Descoberta dos Materiais e Objectos</a></li>
+                                                    <li><a href="">À Descoberta das Inter-relações entre a Natureza e a Sociedade</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)">Planos</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Projeto</a>
+                                        <ul class="dropdown ">
+                                            <li><a href="">Criar Projeto</a></li>
+                                            <li><a href="">Editar Projeto</a></li>
+                                            <li><a href="">Avaliar Projeto</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><a href="#">Trabalho Individual</a>
+                                        <ul class="dropdown ">
+                                            <li><a href="">Criar PIT</a></li>
+                                            <li><a href="">Editar PIT</a></li>
+                                            <li><a href="">Avaliar PIT</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li><a href="javascript:void(0)">Recursos</a>
+                                <div class="megamenu">
+                                    <div class="megamenu-row">
+                                        <div class="col3">
+                                            <h2>Tutoriais</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">3D</a></li>
+                                                <li><a href="">Editar Imagem</a></li>
+                                                <li><a href="">Criar Vídeos</a></li>
+                                                <li><a href="">Criar um Blogue</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Projetos</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Apresentações em Vídeo</a></li>
+                                                <li><a href="">Apresentações Multimédia</a></li>
+                                                <li><a href="">Imagens</a></li>
+                                                <li><a href="">Músicas</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Fichas de Trabalho</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Processador de Texto</a></li>
+                                                <li><a href="">Editor de Imagem</a></li>
+                                                <li><a href="">Motor de Pesquisa</a></li>
+                                                <li><a href="">Folha de Cálculo</a></li>
+                                                <li><a href="">Apresentações Multimédia</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Outros Recursos</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Histórias</a></li>
+                                                <li><a href="">Guiões de Entrevista</a></li>
+                                                <li><a href="">Filmes</a></li>
+                                                <li><a href="">Teatros</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <!--mega menu end-->
+
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--header end-->
+    {% block content %}{% endblock content%}
+
+
+        <!--footer 4 start -->
+        <footer class="footer footer-four">
+            <div class="primary-footer brand-bg text-center">
+                <div class="container">
+
+                  <a href="#top" class="page-scroll btn-floating btn-large pink back-top waves-effect waves-light" data-section="#top">
+                    <i class="material-icons">&#xE316;</i>
+                  </a>
+
+                  <ul class="social-link tt-animate ltr mt-20">
+                  <li><a href="https://www.facebook.com/profile.php?id=100012729397614"><i class="fa fa-facebook"></i></a></li>
+                  <li><a href="https://twitter.com/ProfIgorAlmeida"><i class="fa fa-twitter"></i></a></li>
+                  <li><a href="https://www.linkedin.com/in/igor-almeida-308655106/"><i class="fa fa-linkedin"></i></a></li>
+                  <li><a href="http://infantinho.xyz/blog/rss"><i class="fa fa-rss"></i></a></li>
+                  </ul>
+
+                  <hr class="mt-10">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                          <div class="footer-logo">
+                            <img src="{% static 'slogo_branco.png' %}" height="50" width="200" alt="">
+                          </div>
+
+                          <span class="copy-text">Copyright &copy; 2016-2017 <a href="#">infantinho.xyz</a> &nbsp; | &nbsp;  Lema 2016/2017 &nbsp; | &nbsp;  <a href="mailto:prof.igor@colegioinfante.info">prof.igor@colegioinfante.info</a></span>
+                          <div class="footer-intro">
+                            <p>“O bem de todos, com o melhor de cada um.”</p>
+                          </div>
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                </div><!-- /.container -->
+            </div><!-- /.primary-footer -->
+
+            <div class="secondary-footer brand-bg darken-2 text-center">
+                <div class="container">
+                    <ul>
+                      <li><a href="http://www.infantinho.xyz">Blogue</a></li>
+                      <li><a href="https://www.facebook.com/colegioinfantedhenrique/">Facebook - Colégio Infante</a></li>
+                      <li><a href="https://www.youtube.com/channel/UCIrVEWJXqeHsGtPQarhPdxw">Youtube - infantinho</a></li>
+                    </ul>
+                </div><!-- /.container -->
+            </div><!-- /.secondary-footer -->
+        </footer>
+        <!--footer 4 end-->
+
+
+        <!-- Preloader -->
+        <div id="preloader">
+          <div class="preloader-position">
+            <img src="{% static 'slogo_azul.png' %}" height="50" width="200" alt="logo" >
+            <div class="progress">
+              <div class="indeterminate"></div>
+            </div>
+          </div>
+        </div>
+        <!-- End Preloader -->
+
+
+        <!-- jQuery -->
+        <script src="{% static 'assets/js/jquery-2.1.3.min.js' %}"></script>
+        <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'assets/materialize/js/materialize.min.js' %}"></script>
+        <script src="{% static 'assets/js/smoothscroll.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
+        <script src="{% static 'assets/js/menuzord.js' %}"></script>
+        <script src="{% static 'assets/js/bootstrap-tabcollapse.min.js' %}"></script>
+        <script src="{% static 'assets/js/imagesloaded.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.stellar.min.js' %}"></script>
+        <script src="{% static 'assets/js/masonry.pkgd.min.js' %}"></script>
+        <script src="{% static 'assets/owl.carousel/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'assets/js/scripts.js' %}"></script>
+
+        <!-- RS5.0 Core JS Files -->
+        <script src="{% static 'assets/revolution/js/jquery.themepunch.tools.min.js' %}"></script>
+        <script src="{% static 'assets/revolution/js/jquery.themepunch.revolution.min.js' %}"></script>
+
+        <!-- RS5.0 Init  -->
+        {% verbatim %}
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+               jQuery(".materialize-slider").revolution({
+                    sliderType:"standard",
+                    sliderLayout:"fullwidth",
+                    delay:9000,
+                    navigation: {
+                        keyboardNavigation:"on",
+                        keyboard_direction: "horizontal",
+                        mouseScrollNavigation:"off",
+                        onHoverStop:"off",
+                        touch:{
+                            touchenabled:"on",
+                            swipe_threshold: 75,
+                            swipe_min_touches: 1,
+                            swipe_direction: "horizontal",
+                            drag_block_vertical: false
+                        }
+                        ,
+                        arrows: {
+                            style:"gyges",
+                            enable:true,
+                            hide_onmobile:false,
+                            hide_over:778,
+                            hide_onleave:false,
+                            tmp:'',
+                            left: {
+                                h_align:"right",
+                                v_align:"bottom",
+                                h_offset:40,
+                                v_offset:0
+                            },
+                            right: {
+                                h_align:"right",
+                                v_align:"bottom",
+                                h_offset:0,
+                                v_offset:0
+                            }
+                        }
+                        ,
+                        tabs: {
+                            style:"erinyen",
+                            enable:true,
+                            width:250,
+                            height:100,
+                            min_width:250,
+                            wrapper_padding:0,
+                            wrapper_color:"transparent",
+                            wrapper_opacity:"0",
+                            tmp:'<div class="tp-tab-title">{{title}}</div><div class="tp-tab-desc">{{description}}</div>',
+                            visibleAmount: 3,
+                            hide_onmobile: true,
+                            hide_under:778,
+                            hide_onleave:false,
+                            hide_delay:200,
+                            direction:"vertical",
+                            span:false,
+                            position:"inner",
+                            space:10,
+                            h_align:"right",
+                            v_align:"center",
+                            h_offset:30,
+                            v_offset:0
+                        }
+                    },
+                    viewPort: {
+                        enable:true,
+                        outof:"pause",
+                        visible_area:"80%"
+                    },
+                    responsiveLevels:[1240,1024,778,480],
+                    gridwidth:[1240,1024,778,480],
+                    gridheight:[500,450,400,350],
+                    lazyType:"none",
+                    parallax: {
+                        type:"scroll",
+                        origo:"enterpoint",
+                        speed:400,
+                        levels:[5,10,15,20,25,30,35,40,45,50],
+                    },
+                    disableProgressBar:"on",
+                    parallax: {
+                        type:"mouse",
+                        origo:"slidercenter",
+                        speed:2000,
+                        levels:[2,3,4,5,6,7,12,16,10,50],
+                    }
+
+
+                });
+            });
+        </script>
+        {% endverbatim %}
+    </body>
+</html>
+{% block bellow_html %}{% endblock bellow_html %}
