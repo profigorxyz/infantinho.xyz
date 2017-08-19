@@ -24,6 +24,6 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^$', views.post_grid),
+    url(r'^$', views.post_grid, name='index'),
     url(r'^blog/', include('blog.urls', namespace='blog')),
 ]

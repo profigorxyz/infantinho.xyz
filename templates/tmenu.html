@@ -1,0 +1,143 @@
+{% load staticfiles %}
+        <!--header start-->
+        <header id="header" class="tt-nav transparent-header">
+            <div class="header-sticky light-header">
+                <div class="container">
+                    <div id="materialize-menu" class="menuzord">
+
+                        <!--logo start-->
+                        <a href="" class="logo-brand">
+                            <img class="logo-dark" src="{% static 'slogo_azul.png' %}" height="50" width="200" alt=""/>
+                            <img class="logo-light" src="{% static 'slogo_branco.png' %}" height="50" width="200" alt=""/>
+                        </a>
+                        <!--logo end-->
+
+                        <!--mega menu start-->
+                        <ul class="menuzord-menu light">
+                            <li><a href="javascript:void(0)">Blogue</a>
+                                <ul class="dropdown">
+                                    <li><a href="{% url 'index' %}">Ver Mensagens</a>
+                                    </li>
+                                    <li><a href="{% url 'blog:create' %}">Criar Mensagem</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)">Registos</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Presenças</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Marcar Presenças</a>
+                                            </li>
+                                            <li><a href="#">Verificar Presenças</a>
+                                            </li>
+                                            <li><a href="#">Imprimir Presenças</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Listas de Verificação</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Português</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">Oralidade</a></li>
+                                                    <li><a href="">Leitura e Escrita</a></li>
+                                                    <li><a href="">Educação Literária</a></li>
+                                                    <li><a href="">Gramática</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Matemática</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">Números e Operações</a></li>
+                                                    <li><a href="">Geometria e Medida</a></li>
+                                                    <li><a href="">Organização e Tratamento de Dados</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Estudo do Meio</a>
+                                                <ul class="dropdown">
+                                                    <li><a href="">À Descoberta de Si Mesmo</a></li>
+                                                    <li><a href="">À Descoberta dos Outros e das Instituições</a></li>
+                                                    <li><a href="">À Descoberta do Ambiente Natural</a></li>
+                                                    <li><a href="">À Descoberta das Inter-relações entre Espaços</a></li>
+                                                    <li><a href="">À Descoberta dos Materiais e Objectos</a></li>
+                                                    <li><a href="">À Descoberta das Inter-relações entre a Natureza e a Sociedade</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)">Planos</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Projeto</a>
+                                        <ul class="dropdown ">
+                                            <li><a href="">Criar Projeto</a></li>
+                                            <li><a href="">Editar Projeto</a></li>
+                                            <li><a href="">Avaliar Projeto</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><a href="#">Trabalho Individual</a>
+                                        <ul class="dropdown ">
+                                            <li><a href="">Criar PIT</a></li>
+                                            <li><a href="">Editar PIT</a></li>
+                                            <li><a href="">Avaliar PIT</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li><a href="javascript:void(0)">Recursos</a>
+                                <div class="megamenu">
+                                    <div class="megamenu-row">
+                                        <div class="col3">
+                                            <h2>Tutoriais</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">3D</a></li>
+                                                <li><a href="">Editar Imagem</a></li>
+                                                <li><a href="">Criar Vídeos</a></li>
+                                                <li><a href="">Criar um Blogue</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Projetos</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Apresentações em Vídeo</a></li>
+                                                <li><a href="">Apresentações Multimédia</a></li>
+                                                <li><a href="">Imagens</a></li>
+                                                <li><a href="">Músicas</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Fichas de Trabalho</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Processador de Texto</a></li>
+                                                <li><a href="">Editor de Imagem</a></li>
+                                                <li><a href="">Motor de Pesquisa</a></li>
+                                                <li><a href="">Folha de Cálculo</a></li>
+                                                <li><a href="">Apresentações Multimédia</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col3">
+                                            <h2>Outros Recursos</h2>
+                                            <ul class="list-unstyled">
+                                                <li><a href="">Histórias</a></li>
+                                                <li><a href="">Guiões de Entrevista</a></li>
+                                                <li><a href="">Filmes</a></li>
+                                                <li><a href="">Teatros</a></li>
+                                                <li><a href="">Outros</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <!--mega menu end-->
+
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--header end-->
