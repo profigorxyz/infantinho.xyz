@@ -1,5 +1,6 @@
 {% extends "base.html" %}
       {% block content %}
+      {% include 'top.html' %}
       {% load staticfiles %}
         <!-- blog section start -->
         <section class="blog-section section-padding">
@@ -10,45 +11,43 @@
 
                         <article class="post-wrapper">
 
-
-                          <div class="thumb-wrapper">
-                            <img src="{{ instance.headimage.url }}" class="img-responsive" alt="" >
-
-                            <div class="entry-header">
-                              <span class="posted-in">
-                                <a href="#">{{ instance.tag }}</a>
-                              </span>
-
-                              <h2 class="entry-title">{{ instance.title }}</h2>
-
-                            </div><!-- .entry-header -->
+                          <header class="entry-header-wrapper clearfix">
 
                             <div class="author-thumb waves-effect waves-light">
                               <a href="#"><img src="{% static '400x400_icone.png' %}" alt=""></a>
                             </div>
 
+                            <div class="entry-header">
+
+                              <h2 class="entry-title">{{ instance.title }}</h2>
+
                               <div class="entry-meta">
-                                  <ul class="list-inline">
-                                      <li>
-                                          <i class="fa fa-user"></i><a href="mailto:{{ instance.user.email }}">{% if instance.user.get_full_name %}{{ instance.user.get_full_name }}{% else %} {{ instance.user }} {% endif %}</a>
-                                      </li>
+                                <ul class="list-inline">
+                                    <li>
+                                        <i class="fa fa-user"></i><a href="mailto:{{ instance.user.email }}">{% if instance.user.get_full_name %}{{ instance.user.get_full_name }}{% else %} {{ instance.user }} {% endif %}</a>
+                                    </li>
 
-                                      <li>
-                                          <i class="fa fa-clock-o"></i><a href="#">{{ instance.publish }}</a>
-                                      </li>
+                                    <li>
+                                        <i class="fa fa-clock-o"></i><a href="#">{{ instance.publish }}</a>
+                                    </li>
 
-                                      <li>
-                                          <i class="fa fa-heart-o"></i><a href="#"><span>1</span></a> <!-- need to build logic to read likes -->
-                                      </li>
+                                    <li>
+                                        <i class="fa fa-heart-o"></i><a href="#"><span>1</span></a> <!-- need to build logic to read likes -->
+                                    </li>
 
-                                      <li>
-                                          <i class="fa fa-comment-o"></i><a href="#">3</a> <!-- need to build logic to get comments -->
-                                      </li>
-                                  </ul>
+                                    <li>
+                                        <i class="fa fa-comment-o"></i><a href="#">3</a> <!-- need to build logic to get comments -->
+                                    </li>
+                                </ul>
                               </div><!-- .entry-meta -->
 
-                          </div><!-- .post-thumb -->
+                            </div><!-- .entry-header -->
 
+                          </header><!-- /.entry-header-wrapper -->
+
+                          <div class="thumb-wrapper">
+                            <img src="{{ instance.headimage.url }}" class="img-responsive" alt="" >
+                          </div><!-- .thumb-wrapper -->
 
                           <div class="entry-content">
                             {{ instance.content|safe }}
@@ -93,3 +92,15 @@
         </section>
         <!-- blog section end -->
 {% endblock content %}
+{% block bellow_js %}
+  {% load staticfiles %}
+<script src="{% static 'js/jquery.fitvids.js' %}"></script>
+
+<script>
+  $(document).ready(function(){
+    // Target your .container, .wrapper, .post, etc.
+    $(".container").fitVids();
+  });
+</script>
+
+{% endblock bellow_js %}

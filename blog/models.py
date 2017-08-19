@@ -24,7 +24,7 @@ def upload_location(instance, filename):
         instpk = instance.pk
     else:
         instpk = 'upload'
-    return 'media/{}/{}'.format(instpk, filename)
+    return 'media/blog/{}/{}'.format(instpk, filename)
 
 
 class Post(models.Model):

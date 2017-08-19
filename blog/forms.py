@@ -7,13 +7,14 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         widgets = {
+            'publish': forms.widgets.DateInput(attrs={'class': 'datepicker'}),
             'content': TinyMCE()
         }
         fields = [
             'headimage',
             'title',
-            'tag',
             'content',
             'draft',
+            'tag',
             'publish',
         ]

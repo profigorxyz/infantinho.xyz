@@ -8,6 +8,7 @@ from django.db.models import Q
 
 from .models import Post
 from .forms import PostForm
+# from tinymce.widgets import TinyMCE
 # from comments.forms import CommentForm
 # from comments.models import Comment
 # from django.contrib.contenttypes.models import ContentType
@@ -27,6 +28,8 @@ def post_create(request):
         instance.save()
         messages.success(request, "Mensagem Criada")
         return HttpResponseRedirect(instance.get_absolute_url())
+    elif request.POST:
+        raise
     context = {
         'input': 'Criar',
         'form': form,
@@ -127,7 +130,7 @@ def post_update(request, slug=None):
     if not request.user.is_staff:
         if not request.user.is_superuser:
             raise Http404
-    instance = get_object_or_404(Post.objects.get(slug=slug))
+    instance = get_object_or_404(Post.objects.filter(slug=slug))
     form = PostForm(
         request.POST or None,
         request.FILES or None,
@@ -144,7 +147,7 @@ def post_update(request, slug=None):
         'title': 'Editar: ' + instance.title,
         'form': form,
     }
-    return render(request, 'posts/create.html', context)
+    return render(request, 'blog/create.html', context)
 
 
 # Delete a post

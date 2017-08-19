@@ -1,14 +1,52 @@
 {% extends "base.html" %}
-
-{% block head_extra %}
-{% load staticfiles %}
-{{ form.media }}
-{% endblock head_extra %}
-
-{% block content %}
-<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
-{{ form }}
-<input type='submit' class='btn btn-default' value='{{ input  }} Mensagem' />
-</form>
-</div>
-{% endblock content %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'top.html' %}
+          <section class="section-padding">
+            <div class="container">
+              <form method='POST' action='' enctype='multipart/form-data' >
+                {% csrf_token %}
+                {{ form.as_p }}
+              <input type='submit' class='btn' value='{{ input  }} Mensagem' />
+              </form>
+            </div> <!-- container -->
+          </section> <!-- section-padding -->
+        {% endblock content %}
+{% block bellow_js %}
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=7letxeb4m9vosjuc75r9adbywm0x93kd69oztmd4l2lxebgt"></script>
+<script type="text/javascript" src="/tinymce/filebrowser/"></script>
+      <script type="text/javascript">
+        tinymce.init({
+          selector: 'textarea',
+          height: 500,
+          language_url : '{% static 'tinymce/langs/pt_PT.js' %}',
+          theme: 'modern',
+          plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc help'
+          ],
+          toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+          toolbar2: 'print preview media | forecolor backcolor emoticons | codesample help',
+          image_advtab: true,
+          content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tinymce.com/css/codepen.min.css'
+          ]
+        });
+        </script>
+    <script type="text/javascript">
+          $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Hoje',
+            clear: 'Limpar',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+    </script>
+{% endblock bellow_js %}
