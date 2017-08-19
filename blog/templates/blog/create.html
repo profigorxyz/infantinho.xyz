@@ -9,7 +9,9 @@
             <div class="container">
               <form method='POST' action='' enctype='multipart/form-data' >
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% form form=form %}
+                  {% part form.content %} <textarea name="content" form="form"></textarea> {% endpart %}
+                {% endform %}
               <input type='submit' class='btn' value='{{ input  }} Mensagem' />
               </form>
             </div> <!-- container -->

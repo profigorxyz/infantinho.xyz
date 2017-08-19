@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'stmenu.html' %}
+          <section class="section-padding">
+            <div class="container">
+              <form method='POST' action='' enctype='multipart/form-data' >
+                {% csrf_token %}
+                {% form form=form %}{% endform %}
+              <input type='submit' class='btn right' value='Enviar' />
+              </form>
+            </div> <!-- container -->
+          </section> <!-- section-padding -->
+  {% endblock content %}
