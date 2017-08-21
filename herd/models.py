@@ -23,8 +23,8 @@ class Teacher(models.Model):
 
     def __str__(self):
         return '{} - {} {}'.format(self.subject,
-                                   self.name.first_name,
-                                   self.name.last_name)
+                                   self.user.first_name,
+                                   self.user.last_name)
 
 
 class Student(models.Model):
@@ -34,7 +34,7 @@ class Student(models.Model):
     grade = models.ForeignKey(Grade)
 
     def __str__(self):
-        return '{} {}'.format(self.name.first_name, self.name.last_name)
+        return '{} {}'.format(self.user.first_name, self.user.last_name)
 
     class Meta:
         ordering = ['list_number']
