@@ -3,7 +3,7 @@
 from django.shortcuts import render  # , redirect
 # from .models import Presence
 from django.contrib import messages
-from student.models import Teacher  # Grade, Student, Subject, Teacher
+from herd.models import Teacher  # Grade, Student, Subject, Teacher
 # from django.http import Http404
 # from django.core.files.storage import default_storage
 from .forms import PresForm  # DateForm, PrintDateForm
