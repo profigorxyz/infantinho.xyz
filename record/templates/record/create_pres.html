@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'stmenu.html' %}
+          <section class="section-padding">
+            <div class="container">
+              <form method='POST' action='' enctype='multipart/form-data' >
+                {% csrf_token %}
+                {{ form.as_p }}
+              <input type='submit' class='btn' value='{{ input  }}' />
+              </form>
+            </div> <!-- container -->
+          </section> <!-- section-padding -->
+        {% endblock content %}
+{% block bellow_js %}
+
+{% endblock bellow_js %}
