@@ -2,11 +2,10 @@ from django.db import models
 from herd.models import Student, Subject
 
 
-class Presence(models.Model):
+class PresRec(models.Model):
     P = 0
     F = 1
-    PCHOICES = (
-                (P, 'P'),
+    PCHOICES = ((P, 'P'),
                 (F, 'F'),
                 )
     student = models.ForeignKey(Student)

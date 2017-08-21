@@ -1,22 +1,27 @@
-import os
-from django.conf import settings
-from django.shortcuts import render, redirect
-from .models import Presence
+# import os
+# from django.conf import settings
+from django.shortcuts import render  # , redirect
+# from .models import Presence
 from django.contrib import messages
-from student.models import Grade, Student, Subject, Teacher
-from django.http import Http404
-from django.core.files.storage import default_storage
-from .forms import DateForm, PrintDateForm
+from student.models import Teacher  # Grade, Student, Subject, Teacher
+# from django.http import Http404
+# from django.core.files.storage import default_storage
+from .forms import PresForm  # DateForm, PrintDateForm
 from django.contrib.auth.decorators import login_required
 
 
 @login_required(login_url='/login/google-oauth2/?next=/')
-def presences(request):
+def pres_create(request):
     teacher = Teacher.objects.filter(user__exact=request.user.id).first()
     if not teacher:
         messages.error(request,
                        'Tem de ter autorização para poder marcar presenças.')
         return render(request, 'blank.html')
+    form = PresForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'record/create_pres.html', context)
 
 # #  Enter if its a post from the final form.
 #     if request.method == 'POST' and request.POST['stage'] == '2':
