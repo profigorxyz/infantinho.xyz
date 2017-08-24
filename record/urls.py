@@ -8,4 +8,5 @@ urlpatterns = [
     # url(r'^(?P<slug>[\w-]+)/$', views.post_detail, name='detail'),
     # url(r'^(?P<slug>[\w-]+)/edit/$', views.post_update, name='edit'),
     # url(r'^(?P<slug>[\w-]+)/delete/$', views.post_delete),
+    url(r'^ajax/get_students/$', views.get_students, name='get_students'),
 ]

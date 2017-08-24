@@ -1,13 +1,15 @@
 # import os
 # from django.conf import settings
 from django.shortcuts import render  # , redirect
-# from .models import Presence
+from .models import PresRec
 from django.contrib import messages
-from herd.models import Teacher  # Grade, Student, Subject, Teacher
+from herd.models import Teacher, Subject, Student, Grade
 # from django.http import Http404
 # from django.core.files.storage import default_storage
 from .forms import PresForm  # DateForm, PrintDateForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.core import serializers
 
 
 @login_required(login_url='/login/google-oauth2/?next=/')
@@ -18,29 +20,58 @@ def pres_create(request):
                        'Tem de ter autorização para poder marcar presenças.')
         return render(request, 'blank.html')
     form = PresForm()
+    subject = Subject.objects.filter(teacher__user=request.user.id)
     context = {
         'form': form,
+        'subject': subject,
     }
+    if request.method == 'POST':
+        students = Student.objects.filter(grade__exact=request.POST['grade'])
+        date = request.POST['date_submit'].split('\'')[0]
+        subject = Subject.objects.get(id=request.POST['subject'])
+        for student in students:
+            try:
+                if request.POST[str(student.id)]:
+                    absent = 1
+            except KeyError:
+                absent = 0
+            p = PresRec(
+                student=student,
+                is_absent=absent,
+                subject=subject,
+                date=date,
+            )
+            p.save()
+        messages.success(request,
+                         'Presenças de {} marcadas para o dia {}.'.format(
+                             subject,
+                             date))
     return render(request, 'record/create_pres.html', context)
+
+
+def get_students(request):
+    subject = request.GET.get('subject', None)
+    subject = Subject.objects.get(pk__exact=subject)
+    grade = Grade.objects.get(pk__exact=subject.grade.pk)
+    students = Student.objects.filter(
+        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    subject = str(subject.id)
+    studic = []
+    for student in students:
+        studic.append({
+                      'id': student.id,
+                      'grade': student.grade_id,
+                      'name': '{}'.format(student).upper(),
+                      'jpg': student.photo.face.url,
+                      'subject': subject
+                      }
+                      )
+    data = studic
+    return JsonResponse(data, safe=False)
+
 
 # #  Enter if its a post from the final form.
 #     if request.method == 'POST' and request.POST['stage'] == '2':
-#         students = Student.objects.filter(grade__exact=request.POST['grade'])
-#         date = request.POST['date'].split('\'')[1]
-#         for student in students:
-#             p = Presence(
-#                 student=student,
-#                 is_absent=request.POST[str(student.user)],
-#                 subject=Subject.objects.get(id=request.POST['subject']),
-#                 date=date,
-#             )
-#             p.save()
-#         stage = 0
-#         messages.success(request,
-#                          'Presenças do {} marcadas no dia {}.'.format(
-#                              Subject.objects.get(id=request.POST['subject']),
-#                              date))
-#         return redirect('/pres/')
 # #  Enter elif there's a subject in the POST.
 #     elif "subject" in request.POST:
 #         stage = 1

@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from stdimage.models import StdImageField
+from stdimage.utils import UploadToUUID
 
 
 class Grade(models.Model):
@@ -32,6 +34,10 @@ class Student(models.Model):
     number = models.SmallIntegerField()
     list_number = models.SmallIntegerField()
     grade = models.ForeignKey(Grade)
+    photo = StdImageField(null=True,
+                          blank=True,
+                          upload_to=UploadToUUID(path='students'),
+                          variations={'face': (300, 300)})
 
     def __str__(self):
         return '{} {}'.format(self.user.first_name,
