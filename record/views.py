@@ -1,15 +1,21 @@
-# import os
-# from django.conf import settings
+# TODO construir uma loading bar para quando está a carregar a tabela
+# e ou a construir os ficheiros para download
+import os
+from django.conf import settings
 from django.shortcuts import render  # , redirect
 from .models import PresRec
 from django.contrib import messages
 from herd.models import Teacher, Subject, Student, Grade
+from django.core.files.storage import FileSystemStorage, DefaultStorage, Storage
+from openpyxl import workbook, load_workbook
+from openpyxl.drawing.image import Image
 # from django.http import Http404
 # from django.core.files.storage import default_storage
 from .forms import PresForm  # DateForm, PrintDateForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.core import serializers
+# from django.core import serializers
+import datetime
 
 
 @login_required(login_url='/login/google-oauth2/?next=/')
@@ -49,7 +55,166 @@ def pres_create(request):
     return render(request, 'record/create_pres.html', context)
 
 
+@login_required(login_url='/login/google-oauth2/?next=/')
+def pres_read(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/read_pres.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def pres_print(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/print_pres.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def skill_create(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/read_pres.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def skill_read(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/read_skill.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def skill_update(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/update_skill.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def skill_delete(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request, 'Tem de ter\
+            autorização para poder verificar presenças.')
+        return render(request, 'blank.html')
+    subject = Subject.objects.filter(teacher__user=request.user.id)
+    context = {
+        'subject': subject,
+    }
+    return render(request, 'record/delete_skill.html', context)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def get_print_url(request):
+    subject = int(request.GET.get('subject', None))
+    if not subject:
+        messages.error(request,
+                       'Tem de escolher uma turma.')
+        return render(request, 'blank.html')
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request,
+                       'Tem de ter autorização para aceder.')
+        return render(request, 'blank.html')
+    storage = DefaultStorage()
+    flpres = storage.open('presence.xlsx', mode='rb')
+    wb = load_workbook(flpres)
+    ws = wb['Folha1']
+    now = datetime.datetime.now()
+    if now.month < 7:
+        end_date = datetime.date(now.year, 7, 1)
+        start_date = datetime.date(now.year - 1, 9, 1)
+    else:
+        end_date = datetime.date(now.year + 1, 7, 1)
+        start_date = datetime.date(now.year, 9, 1)
+    p = PresRec.objects.filter(
+        subject__exact=subject,
+        date__range=(start_date, end_date)
+    ).order_by('-date')
+    subject = Subject.objects.get(pk__exact=subject)
+    grade = Grade.objects.get(pk__exact=subject.grade.pk)
+    students = Student.objects.filter(
+        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    for student in students:
+        ws['A' + get_y(student.list_number - 1, 9)] = '{} {}'.format(
+            student.user.first_name, student.user.last_name)
+    for p in p:
+        if p.is_absent == 0:
+            pres = 'P'
+        elif p.is_absent == 1:
+            pres = 'F'
+        ws[get_x(p.date.day) + get_y(
+            p.student.list_number - 1,
+            p.date.month)] = pres
+    ws = wb['Folha1']
+    fllogo = storage.open('logotipo.png', mode='rb')
+    img = Image(fllogo)
+    ws.add_image(img, 'L3')
+    ws['A35'] = '{}'.format(subject)
+    ws['A62'] = '{} {} / {}'.format(
+        'Ano letivo de ', start_date.year, end_date.year)
+    filename = ''.join('{}.xlsx'.format(subject).split())
+    fs = FileSystemStorage()
+    fs = fs.open(filename, mode='wb+')
+    # This dont work properly
+    # fs = storage.open('print/{}'.format(filename), mode='wb+')
+    wb.save(fs)
+    storage.save(filename, fs)
+    fs.close()
+    fllogo.close()
+    flpres.close()
+    os.remove(os.path.join(settings.MEDIA_ROOT, filename))
+    file_url = storage.url(filename)
+    data = []
+    data.append({
+        'url': file_url,
+        'name': '{}'.format(filename).upper(),
+    })
+    return JsonResponse(data, safe=False)
+
+
+@login_required(login_url='/login/google-oauth2/?next=/')
 def get_students(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request,
+                       'Tem de ter autorização para aceder.')
+        return render(request, 'blank.html')
     subject = request.GET.get('subject', None)
     subject = Subject.objects.get(pk__exact=subject)
     grade = Grade.objects.get(pk__exact=subject.grade.pk)
@@ -70,46 +235,116 @@ def get_students(request):
     return JsonResponse(data, safe=False)
 
 
-# #  Enter if its a post from the final form.
-#     if request.method == 'POST' and request.POST['stage'] == '2':
-# #  Enter elif there's a subject in the POST.
-#     elif "subject" in request.POST:
-#         stage = 1
-#         grade = int(request.POST['subject'].split("-")[1])
-#         subject = int(request.POST['subject'].split("-")[0])
-#         date = request.POST['date'],
-#         students = Student.objects.filter(grade__exact=int(grade))
-#         ngrade = Grade.objects.get(pk=grade)
-#         nsubject = Subject.objects.get(pk=subject)
-#         context = {
-#             'grade': grade,
-#             'subject': subject,
-#             'ngrade': ngrade,
-#             'nsubject': nsubject,
-#             'stage': stage,
-#             'students': students,
-#             'date': date,
-#         }
-#         return render(request, 'record/preform.html', context)
-# #  Default enter point.
-#     else:
-#         stage = 0
-#         subject = Subject.objects.filter(teacher__name=request.user.id)
-#         form = DateForm(request.POST or None)
-#         context = {
-#             'stage': stage,
-#             'subject': subject,
-#             'form': form,
-#         }
-#         return render(request, 'record/preform.html', context)
-#     return render(request, 'blank.html')
+@login_required(login_url='/login/google-oauth2/?next=/')
+def get_presents(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        messages.error(request,
+                       'Tem de ter autorização para aceder.')
+        return render(request, 'blank.html')
+    subject = request.GET.get('subject', None)
+    subject = Subject.objects.get(pk__exact=subject)
+    grade = Grade.objects.get(pk__exact=subject.grade.pk)
+    students = Student.objects.filter(
+        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    subjtitle = str(subject)
+    now = datetime.datetime.now()
+    if now.month < 12 and now.month > 8:
+        start_date = datetime.date(now.year, 9, 1)
+        end_date = datetime.date(now.year, now.month, now.day)
+    elif now.month < 3:
+        start_date = datetime.date(now.year - 1, now.month - 3, 1)
+        end_date = datetime.date(now.year, now.month, now.day)
+    elif now.month > 6:
+        start_date = datetime.date(now.year, 4, 1)
+        end_date = datetime.date(now.year, 6, 30)
+    else:
+        start_date = datetime.date(now.year, now.month - 3, 1)
+        end_date = datetime.date(now.year, now.month, now.day)
+    studic = []
+    for student in students:
+        pres = PresRec.objects.filter(
+            subject__exact=subject,
+            student__user__exact=student.user,
+            date__range=[
+                start_date,
+                end_date
+            ],
+            is_absent=0).count()
+        absent = PresRec.objects.filter(
+            subject__exact=subject,
+            student__user__exact=student.user,
+            date__range=[
+                start_date,
+                end_date
+            ],
+            is_absent=1).count()
+        studic.append({
+                      'name': '{}'.format(student),
+                      'pres': pres,
+                      'absent': absent,
+                      'start_date': start_date,
+                      'end_date': end_date,
+                      'subject': subjtitle
+                      }
+                      )
+    data = studic
+    return JsonResponse(data, safe=False)
 
 
-# @login_required(login_url='/login/google-oauth2/?next=/')
-# def report(request):
-#     if not request.user.is_staff or not request.user.is_superuser:
-#         raise Http404
-#     errors = []  # need to implement someway to show errors.
+def get_x(day):
+    switcher = {
+        1: "C",
+        2: "D",
+        3: "E",
+        4: "F",
+        5: "G",
+        6: "H",
+        7: "I",
+        8: "J",
+        9: "K",
+        10: "L",
+        11: "M",
+        12: "N",
+        13: "O",
+        14: "P",
+        15: "Q",
+        16: "R",
+        17: "S",
+        18: "T",
+        19: "U",
+        20: "V",
+        21: "W",
+        22: "X",
+        23: "Y",
+        24: "Z",
+        25: "AA",
+        26: "AB",
+        27: "AC",
+        28: "AD",
+        29: "AE",
+        30: "AF",
+        31: "AG"
+    }
+    return switcher.get(day)
+
+
+def get_y(counter, month):
+    y = 90 + (counter * 10)
+    if month > 8 and month < 13:
+        y = y + counter + (month - 7)
+    else:
+        y = y + counter + month + 5
+    return str(y)
+
+    # if now.month < 3:
+    #     end_month = datetime.date(now.year, 7, 1)
+    #     start_date = datetime.date(now.year - 1, 9, 1)
+    # else:
+    #     end_date = datetime.date(now.year + 1, 7, 1)
+    #     start_date = datetime.date(now.year, 9, 1)
+
+
 #     if request.method == 'POST' and request.POST['stage'] == '1':
 #         import datetime
 #         from openpyxl import workbook, load_workbook

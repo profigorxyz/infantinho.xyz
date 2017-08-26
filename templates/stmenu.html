@@ -6,7 +6,7 @@
                     <div id="materialize-menu" class="menuzord">
 
                         <!--logo start-->
-                        <a href="" class="logo-brand">
+                        <a href="{% url 'index' %}" class="logo-brand">
                             <img class="logo-dark" src="{% static 'slogo_azul.png' %}" height="50" width="200" alt=""/>
                             <img class="logo-light" src="{% static 'slogo_branco.png' %}" height="50" width="200" alt=""/>
                         </a>
@@ -28,9 +28,9 @@
                                         <ul class="dropdown">
                                             <li><a href="{% url 'record:create' %}">Marcar Presenças</a>
                                             </li>
-                                            <li><a href="#">Verificar Presenças</a>
+                                            <li><a href="{% url 'record:read' %}">Verificar Presenças</a>
                                             </li>
-                                            <li><a href="#">Imprimir Presenças</a>
+                                            <li><a href="{% url 'record:print' %}">Imprimir Presenças</a>
                                             </li>
                                         </ul>
                                     </li>

@@ -5,22 +5,48 @@
   {% endblock headcontent%}
         {% block content %}
         {% include 'stmenu.html' %}
+        <section class="blog-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="posts-content single-post">
+
+                        <article class="post-wrapper">
+
+                          <header class="entry-header-wrapper clearfix">
+
+                            <div class="entry-header">
+
+                              <h2 class="entry-title">Marcar Presenças</h2>
+
+                            </div><!-- .entry-header -->
+
+                          </header><!-- /.entry-header-wrapper -->
+
+                          <div class="entry-content">
+                            <form method='POST' action='' enctype='multipart/form-data' >
+                              {% csrf_token %}
+                              <p style="text-align: center;">
+                              {% for sub in subject %}
+                                <button type="button" id="sub_" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
+                                {% if forloop.last %}
+                              </p>
+                              {% endif %}
+                              {% endfor %}
+                              <p style="text-align: center;"><label for="date">Data:</label> <input type="text" name="date" value="{% now "Y-m-j" %}" required id="date" class="datepicker" style="text-align: center;"/></p>
+                              <p id="grade" style="text-align: center;"><ul id="blogGrid" class="ulpresent"></ul></p>
+                              <p id="subject" style="text-align: center;"><input type='submit' class='btn' value='GRAVAR' /></p>
+                            </form>
+                          </div><!-- .entry-content -->
+                      </article><!-- /.post-wrapper -->
+                    </div><!-- /.posts-content -->
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section>
           <section class="section-padding">
             <div class="container">
-              <br><br><br><br>
-              <form method='POST' action='' enctype='multipart/form-data' >
-                {% csrf_token %}
-                <p style="text-align: center;">
-                {% for sub in subject %}
-                  <button type="button" id="sub_" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
-                  {% if forloop.last %}
-                </p>
-                {% endif %}
-                {% endfor %}
-                <p><label for="date">Data:</label> <input type="text" name="date" value="{% now "Y-m-j" %}" required id="date" class="datepicker" /></p>
-                <p id="subject" style="text-align: center;"><input type='submit' class='btn' value='GRAVAR' /></p>
-                <p id="grade" style="text-align: center;"><ul id="blogGrid" class="ulpresent"></ul></p>
-              </form>
+
             </div> <!-- container -->
           </section> <!-- section-padding -->
         {% endblock content %}
