@@ -14,6 +14,9 @@
 
                         <!--mega menu start-->
                         <ul class="menuzord-menu light">
+                            {% if request.user.is_superuser %}
+                            <li><a href="{% url 'herd:upload' %}">Upload</a></li>
+                            {% endif %}
                             <li><a href="javascript:void(0)">Blogue</a>
                                 <ul class="dropdown">
                                     <li><a href="{% url 'index' %}">Ver Mensagens</a>

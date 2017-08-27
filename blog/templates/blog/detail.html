@@ -1,6 +1,30 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% block headcontent %}
+<!-- Search for these meta tags -->
+<meta property="og:title"              content="{{ instance.title }}" />
+{% if instance.headimage %}
+<meta property="og:image"              content="{{ instance.headimage.medium.url }}" />
+{% else %}
+<meta property="og:image"              content="{% static '400x400_icone.png' %}" />
+{% endif %}
+<meta property="og:description"        content="{{ instance.content|striptags|safe|truncatechars_html:100 }}" />
+<meta property="og:site_name"          content="Infantinho" />
+<meta property="og:url"                content="{{ request.build_absolute_uri }}" />
+<meta property="og:type"               content="article" />
+<meta property="og:locale"             content="pt_PT" />
+<meta property="fb:app_id"             content="1694858034111220" />
+<!-- Author info -->
+<meta property="article:author"        content="https://www.facebook.com/infantinho.xyz" />
+<meta property="article:publisher"        content="https://www.facebook.com/infantinho.xyz" />
+
+
+
+
+
+<!-- End -->
+{% endblock headcontent %}
       {% block content %}
-      {% load staticfiles %}
       {% include "stmenu.html" %}
         <!-- blog section start -->
         <section class="blog-section section-padding">
@@ -63,7 +87,7 @@
 
                             <ul class="list-inline right share-post">
 
-                                <li><a target="_blank" href="https://www.facebook.com/dialog/share?app_id=1694858034111220&display=popup&href={{ request.build_absolute_uri }}&redirect_uri={{ 'https://www.facebook.com/profile.php?id=100012729397614'|iriencode }}" class='shareBtn'><i class="fa fa-facebook"></i> <span>Partilha</span></a>
+                                <li><a target="_blank" href="https://www.facebook.com/dialog/share?app_id=1694858034111220&display=popup&href={{ request.build_absolute_uri }}" class='shareBtn'><i class="fa fa-facebook"></i> <span>Partilha</span></a>
                                 </li>
                                 <li><a target="_blank" href="https://twitter.com/intent/tweet?text={{ instance.title|safe }}&via=ProfIgorAlmeida&url={{ request.build_absolute_uri }}"><i class="fa fa-twitter"></i> <span>Tweet</span></a>
                                 </li>

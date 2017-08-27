@@ -9,8 +9,8 @@
             <div class="container">
               <form method='POST' action='' enctype='multipart/form-data' >
                 {% csrf_token %}
-                {{ form.as_p }}
-              <input type='submit' class='btn' value='{{ input  }} Mensagem' />
+		{{ form }}
+		<input type='submit' class='btn' value='{{ input  }} Mensagem' />
               </form>
             </div> <!-- container -->
           </section> <!-- section-padding -->
