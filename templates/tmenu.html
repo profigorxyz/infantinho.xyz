@@ -29,11 +29,11 @@
                                 <ul class="dropdown">
                                     <li><a href="#">Presenças</a>
                                         <ul class="dropdown">
-                                            <li><a href="#">Marcar Presenças</a>
+                                            <li><a href="{% url 'record:create' %}">Marcar Presenças</a>
                                             </li>
-                                            <li><a href="#">Verificar Presenças</a>
+                                            <li><a href="{% url 'record:create' %}">Verificar Presenças</a>
                                             </li>
-                                            <li><a href="#">Imprimir Presenças</a>
+                                            <li><a href="{% url 'record:print' %}">Imprimir Presenças</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -143,4 +143,5 @@
                 </div>
             </div>
         </header>
+        {% include 'sms.html' %}
         <!--header end-->

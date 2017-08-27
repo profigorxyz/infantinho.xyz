@@ -7,11 +7,7 @@
         {% include 'stmenu.html' %}
           <section class="section-padding">
             <div class="container">
-              <form method='POST' action='' enctype='multipart/form-data' >
-                {% csrf_token %}
-		{{ form }}
-		<input type='submit' class='btn' value='{{ input  }} Mensagem' />
-              </form>
+              {% include 'sms.html' %}
             </div> <!-- container -->
           </section> <!-- section-padding -->
         {% endblock content %}
