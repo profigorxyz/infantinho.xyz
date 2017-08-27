@@ -1,10 +1,7 @@
 from django.db import models
 from django.conf import settings
-<<<<<<< HEAD
 from stdimage.models import StdImageField
 from stdimage.utils import UploadToUUID
-=======
->>>>>>> 334c8eba6362ccffb8257e3a2268669aa495068e
 
 
 class Grade(models.Model):
@@ -28,13 +25,8 @@ class Teacher(models.Model):
 
     def __str__(self):
         return '{} - {} {}'.format(self.subject,
-<<<<<<< HEAD
                                    self.user.first_name,
                                    self.user.last_name)
-=======
-                                   self.name.first_name,
-                                   self.name.last_name)
->>>>>>> 334c8eba6362ccffb8257e3a2268669aa495068e
 
 
 class Student(models.Model):
@@ -42,7 +34,6 @@ class Student(models.Model):
     number = models.SmallIntegerField()
     list_number = models.SmallIntegerField()
     grade = models.ForeignKey(Grade)
-<<<<<<< HEAD
     photo = StdImageField(null=True,
                           blank=True,
                           upload_to=UploadToUUID(path='students'),
@@ -51,11 +42,6 @@ class Student(models.Model):
     def __str__(self):
         return '{} {}'.format(self.user.first_name,
                               self.user.last_name)
-=======
-
-    def __str__(self):
-        return '{} {}'.format(self.name.first_name, self.name.last_name)
->>>>>>> 334c8eba6362ccffb8257e3a2268669aa495068e
 
     class Meta:
         ordering = ['list_number']

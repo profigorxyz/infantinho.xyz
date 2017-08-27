@@ -26,9 +26,6 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^$', views.post_grid, name='index'),
     url(r'^blog/', include('blog.urls', namespace='blog')),
-<<<<<<< HEAD
     url(r'^record/', include('record.urls', namespace='record')),
-=======
     url(r'^herd/', include('herd.urls', namespace='herd'))
->>>>>>> 334c8eba6362ccffb8257e3a2268669aa495068e
 ]
