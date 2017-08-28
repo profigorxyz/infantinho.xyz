@@ -3,5 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.upload_file, name='upload'),
+    url(r'^upfile/$', views.upload_file, name='upload'),
+    url(r'^upgrade/$', views.update_grade, name='upgrade'),
 ]

@@ -16,16 +16,16 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from filebrowser.sites import site
-from blog import views
-
+from blog import views as bviews
 
 urlpatterns = [
     url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^$', views.post_grid, name='index'),
+    url(r'^$', bviews.post_grid, name='index'),
     url(r'^blog/', include('blog.urls', namespace='blog')),
     url(r'^record/', include('record.urls', namespace='record')),
-    url(r'^herd/', include('herd.urls', namespace='herd'))
+    url(r'^herd/', include('herd.urls', namespace='herd')),
+    url(r'^ajax/', include('ajax.urls', namespace='ajax')),
 ]

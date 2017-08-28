@@ -91,17 +91,17 @@
 
       $.ajax({
         type: 'GET',
-        url: '/record/ajax/get_students/',
+        url: '/ajax/get_students/',
         data: {
-          subject: subject
+          subject: subject,
         },
         dataType: 'json',
         success: function (data) {
           var $div = $('<div>').append(
-                  $('<input type="hidden" name="grade" value="' + data[0].grade + '" />')).appendTo('#grade');
+                  $('<input type="hidden" name="grade" value="' + data.class.grade + '" />')).appendTo('#grade');
           var $div = $('<div>').append(
-                  $('<input type="hidden" name="subject" value="' + data[0].subject + '" />')).appendTo('#subject');
-          $.each(data, function(i, e){
+                  $('<input type="hidden" name="subject" value="' + data.class.subject + '" />')).appendTo('#subject');
+          $.each(data.student, function(i, e){
             var $li = $('<li class="lipresent">').append(
                 $('<input class="presinput" name="' + e.id + '" type="checkbox" value="1" id="' + e.id + '"/><label class="preslabel" for="' + e.id + '" style="text-align: center;"><img src="' + e.jpg + '"/><br />' + e.name + '</label>')).appendTo('#blogGrid');
           });

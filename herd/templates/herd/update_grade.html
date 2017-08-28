@@ -17,7 +17,7 @@
 
                             <div class="entry-header">
 
-                              <h2 class="entry-title">Verificar Presenças</h2>
+                              <h2 class="entry-title">Atualizar Turma</h2>
 
                             </div><!-- .entry-header -->
 
@@ -25,8 +25,8 @@
 
                           <div class="entry-content">
                             <p style="text-align: center;">
-                            {% for sub in subject %}
-                              <button type="button" id="sub_" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
+                            {% for g in grade %}
+                              <button type="button" id="sub_{{ g.pk }}" name="grade" value='{{ g.pk }}' class="btn">{{ g }}</button>
                               {% if forloop.last %}
                             </p>
                             {% endif %}
@@ -37,12 +37,14 @@
                     <div class="col-md-8 col-md-offset-2">
 
                         <div class="mt-30"></div>
+                        <form>
                         <table class="table table-striped">
                             <thead id="thead">
                             </thead>
                             <tbody id="tbody">
                             </tbody>
                         </table>
+                        </form>
                     </div>
                 </div><!-- /.row -->
 
@@ -58,29 +60,29 @@
         </section>
         {% endblock content %}
 {% block bellow_js %}
-{% verbatim %}
 <script>
-    $("#sub_").click(function () {
-      var subject = ( $(this).val() );
+    {% for g in grade %}
+    $("#sub_{{ g.pk }}" ).click(function () {
+      var grade = ( $(this).val() );
 
       $.ajax({
         type: 'GET',
-        url: '/ajax/get_presents/',
+        url: '/ajax/get_students/',
         data: {
-          subject: subject
+          grade: grade,
         },
         dataType: 'json',
         success: function (data) {
-          $('#subtable').html('Presenças de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
+          $('#subtable').html('Turma {{ g }}');
           var $tr = $('<tr>').append(
-                  $('<th>Nome</th><th>Presenças</th><th>Faltas</th>')).appendTo('#thead');
-          $.each(data, function(i, e){
+                  $('<th>Foto</th><th>Nome</th><th>Turma</th>')).appendTo('#thead');
+          $.each(data.student, function(i, e){
             var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
+                $('<th scope="row"><img src="' + e.jpg + '" width="100" alt="' +  e.name + '" class="img-fluid" style="max-width: 100%; height: auto;" /></th><td>' + e.name + '</td><td>' + data.class.name + '</td>')).appendTo('#tbody');
           });
         }
       });
     });
+    {% endfor %}
   </script>
-{% endverbatim %}
 {% endblock bellow_js %}
