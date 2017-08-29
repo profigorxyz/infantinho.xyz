@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage, DefaultStorage
+from django.core.files.base import ContentFile
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
 from herd.models import Teacher, Subject, Student, Grade
@@ -113,6 +114,7 @@ def get_print_url(request):
     fs = fs.open(filename, mode='wb+')
     # This dont work properly
     # fs = storage.open('print/{}'.format(filename), mode='wb+')
+    # fs = ContentFile()
     wb.save(fs)
     storage.save(filename, fs)
     fs.close()
@@ -138,8 +140,8 @@ def get_students(request):
     grade = request.GET.get('grade', None)
     subject = request.GET.get('subject', None)
     if not grade:
-        sub = Subject.objects.get(pk__exact=subject)
-        grade = Grade.objects.get(pk__exact=sub.grade.pk)
+        sub = Subject.objects.filter(pk__exact=subject).first()
+        grade = Grade.objects.filter(pk__exact=sub.grade_id).first()
     sts = Student.objects.filter(
         grade__exact=grade).order_by('user__first_name', 'user__last_name')
     allgd = Grade.objects.all()
@@ -165,6 +167,15 @@ def get_students(request):
             'name': '{}'.format(student).upper(),
             'jpg': student.photo.face.url,
         }
+    data = {
+        'grade': grades,
+        'student': students,
+        'class': team,
+    }
+    jsondump = {
+        'sort_keys': True,
+    }
+    return JsonResponse(data, json_dumps_params=jsondump)
     # grades = []
     # students = []
     # for agd in allgd:
@@ -184,16 +195,6 @@ def get_students(request):
     #             'subject': subject
     #         }
     #     })
-    data = {
-        'grade': grades,
-        'student': students,
-        'class': team,
-    }
-    jsondump = {
-        'sort_keys': True,
-    }
-    return JsonResponse(data, json_dumps_params=jsondump)
-
 
 @login_required(login_url='/login/google-oauth2/?next=/')
 def get_presents(request):

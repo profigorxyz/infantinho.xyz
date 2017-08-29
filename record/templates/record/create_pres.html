@@ -28,14 +28,20 @@
                               {% csrf_token %}
                               <p style="text-align: center;">
                               {% for sub in subject %}
-                                <button type="button" id="sub_" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
+                                <button type="button" id="sub_{{ sub.pk }}" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
                                 {% if forloop.last %}
                               </p>
                               {% endif %}
                               {% endfor %}
                               <p style="text-align: center;"><label for="date">Data:</label> <input type="text" name="date" value="{% now "Y-m-j" %}" required id="date" class="datepicker" style="text-align: center;"/></p>
-                              <p id="grade" style="text-align: center;"><ul id="blogGrid" class="ulpresent"></ul></p>
-                              <p id="subject" style="text-align: center;"><input type='submit' class='btn' value='GRAVAR' /></p>
+                                <div class="fixed-action-btn">
+                                  <button class="btn-floating btn-large red z-depth-4 pulse" type="submit" name="action">
+                                    <i class="large material-icons">save</i>
+                                  </button>
+                                </div>
+                              <p id="grade" style="text-align: center;"></p>
+                              <p id="grid" style="text-align: center;"></p>
+                              <p id="subject" style="text-align: center;"></p>
                             </form>
                           </div><!-- .entry-content -->
                       </article><!-- /.post-wrapper -->
@@ -84,9 +90,10 @@
             closeOnClear: true,
           });
     </script>
-{% verbatim %}
 <script>
-    $("#sub_").click(function () {
+{% for s in subject %}
+
+    $("#sub_{{ s.pk }}").click(function () {
       var subject = ( $(this).val() );
 
       $.ajax({
@@ -97,17 +104,27 @@
         },
         dataType: 'json',
         success: function (data) {
-          var $div = $('<div>').append(
-                  $('<input type="hidden" name="grade" value="' + data.class.grade + '" />')).appendTo('#grade');
-          var $div = $('<div>').append(
-                  $('<input type="hidden" name="subject" value="' + data.class.subject + '" />')).appendTo('#subject');
+          // var $div = $('<div>').append(
+          //         $('<input type="hidden" name="grade" value="' + data.class.grade + '" />')).appendTo('#grade');
+          // var $div = $('<div>').append(
+          //         $('<input type="hidden" name="subject" value="' + data.class.subject + '" />')).appendTo('#subject');
+          $('#grade').html('<input type="hidden" name="grade" value="' + data.class.grade + '" />');
+          $('#subject').html('<input type="hidden" name="subject" value="' + data.class.subject + '" />');
+          $('#grid').html('<ul id="blogGrid" class="ulpresent">');
           $.each(data.student, function(i, e){
-            var $li = $('<li class="lipresent">').append(
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $li = $('<li class="lipresent">').append(
+                $('<input class="presinput" name="' + e.id + '" type="checkbox" value="1" id="' + e.id + '"/><label class="preslabel" for="' + e.id + '" style="text-align: center;"><img src="' + e.jpg + '"/><br />' + e.name + '</label></ul>')).appendTo('#blogGrid');
+            } else {
+              var $li = $('<li class="lipresent">').append(
                 $('<input class="presinput" name="' + e.id + '" type="checkbox" value="1" id="' + e.id + '"/><label class="preslabel" for="' + e.id + '" style="text-align: center;"><img src="' + e.jpg + '"/><br />' + e.name + '</label>')).appendTo('#blogGrid');
+            }
+
           });
         }
       });
     });
+{% endfor %}
   </script>
-{% endverbatim %}
 {% endblock bellow_js %}

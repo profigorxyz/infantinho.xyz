@@ -36,7 +36,7 @@ class Student(models.Model):
     grade = models.ForeignKey(Grade)
     photo = StdImageField(null=True,
                           blank=True,
-                          upload_to=UploadToUUID(path='students/'),
+                          upload_to=UploadToUUID(path='students'),
                           variations={'face': (300, 300)})
 
     def __str__(self):
