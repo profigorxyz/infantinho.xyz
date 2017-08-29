@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from filebrowser.sites import site
 from blog import views as bviews
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     url(r'^admin/filebrowser/', include(site.urls)),
@@ -30,4 +32,5 @@ urlpatterns = [
     url(r'^ajax/', include('ajax.urls', namespace='ajax')),
     url('', include('social_django.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
+    url(r'^terms/$', TemplateView.as_view(template_name="terms.txt", content_type="text/plain"), name="terms"),
 ]
