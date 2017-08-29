@@ -28,4 +28,6 @@ urlpatterns = [
     url(r'^record/', include('record.urls', namespace='record')),
     url(r'^herd/', include('herd.urls', namespace='herd')),
     url(r'^ajax/', include('ajax.urls', namespace='ajax')),
+    url('', include('social_django.urls', namespace='social')),
+    url('', include('django.contrib.auth.urls', namespace='auth')),
 ]

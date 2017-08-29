@@ -136,6 +136,13 @@
                                     </div>
                                 </div>
                             </li>
+                            {% if not request.user.is_authenticated %}
+                             <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Entrar</a>
+                             </li>
+                             {% else %}
+                             <li><a href="{% url 'auth:logout' %}?next={{ request.path }}">Sair</a>
+                             </li>
+                             {% endif %}
                         </ul>
                         <!--mega menu end-->
 
