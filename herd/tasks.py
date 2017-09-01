@@ -42,7 +42,7 @@ def build_school(x):
                 student.grade = Grade.objects.filter(name__exact='EX').first()
                 student.save()
             print('Aluno {} criado ou atualizado.'.format(s))
-    files = glob.glob('{}[0-9]*.xlsx'.format(settings.MEDIA_ROOT))
+    files = glob.glob('{}0*.*'.format(settings.MEDIA_ROOT))
     for f in files:
         os.remove(f)
 
