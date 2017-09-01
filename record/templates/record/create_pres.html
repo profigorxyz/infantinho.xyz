@@ -18,7 +18,9 @@
                             <div class="entry-header">
 
                               <h2 class="entry-title">Marcar Presenças</h2>
-
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}
                             </div><!-- .entry-header -->
 
                           </header><!-- /.entry-header-wrapper -->

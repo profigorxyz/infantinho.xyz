@@ -7,7 +7,9 @@
         {% include 'stmenu.html' %}
           <section class="section-padding">
             <div class="container">
-              <form method='POST' action='' enctype='multipart/form-data' >
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}              <form method='POST' action='' enctype='multipart/form-data' >
                 {% csrf_token %}
 		{{ form }}
 		<input type='submit' class='btn' value='{{ input  }} Mensagem' />

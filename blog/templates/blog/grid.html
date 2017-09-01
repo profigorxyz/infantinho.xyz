@@ -110,7 +110,9 @@
         <!-- Grid News -->
         <section class="section-padding grid-news-hover grid-blog">
             <div class="container">
-
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}
               <div class="row">
                 <div id="blogGrid">
 

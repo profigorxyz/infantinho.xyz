@@ -29,7 +29,9 @@
         <!-- blog section start -->
         <section class="blog-section section-padding">
             <div class="container">
-                <div class="row">
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}                <div class="row">
                     <div class="col-md-12">
                       <div class="posts-content single-post">
 
