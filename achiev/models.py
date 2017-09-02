@@ -2,45 +2,57 @@ from django.db import models
 from herd.models import Student
 
 
+class SubSubArea(models.Model):
+    ssarea = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return '{}'.format(self.ssarea)
+
+
+class SubArea(models.Model):
+    sarea = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return '{}'.format(self.sarea)
+
+
 class Area(models.Model):
     AREAS = (
         (0, 'Matemática'),
         (1, 'Português'),
         (2, 'Estudo do Meio'),
     )
-    name = models.SmallIntegerField(
+    area = models.SmallIntegerField(
         choices=AREAS,
         default=0,
-        verbose_name='Áreas do Conhecimento'
+        verbose_name='Áreas do Conhecimento',
+        unique=True
     )
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.area)
 
 
-class SubArea(models.Model):
-    area = models.ForeignKey(Area, default=1)
-    name = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-
-class SubSubArea(models.Model):
-    subarea = models.ForeignKey(SubArea, default=1)
-    name = models.CharField(max_length=255, unique=True)
+class AreaSubareaSubSubarea(models.Model):
+    area = models.ForeignKey(Area)
+    sarea = models.ForeignKey(SubArea, blank=True)
+    ssarea = models.ForeignKey(SubSubArea, blank=True)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}: {!s}: {!s}: '.format(
+            self.area.get_area_display(),
+            self.sarea.sarea if self.sarea.sarea is not None else '_',
+            self.ssarea.ssarea if self.ssarea.ssarea is not None else '_'
+        )
 
 
 class Achiev(models.Model):
     name = models.TextField()
-    subsubarea = models.ForeignKey(SubSubArea)
+    asss = models.ForeignKey(AreaSubareaSubSubarea)
     level = models.SmallIntegerField()
 
     def __str__(self):
-        return '{}: {}'.format(self.subsubarea.subarea.area, self.name)
+        return '{}{}'.format(self.asss, self.name)
 
 
 class StudentSysLevel(models.Model):

@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import task, shared_task
 from .models import Achiev, Area, SubArea, SubSubArea
+from .models import AreaSubareaSubSubarea as ASSS
 from openpyxl import load_workbook
 import os
 
@@ -12,7 +13,7 @@ def erase_trash(path_to_file):
 
 @task(name="create_achiev")
 def create_achiev(xlxs):
-    (build_achiev.s(xlxs) | erase_trash.s(xlxs))
+    build_achiev(xlxs)
 
 
 @shared_task
@@ -42,28 +43,42 @@ def pop_achiev(x, y):
     achiev = x
     area = y
     ach_name = achiev.get('name')
-    subarea = achiev.get('subarea')
-    subsubarea = achiev.get('subsubarea')
+    sarea = achiev.get('subarea')
+    ssarea = achiev.get('subsubarea')
     level = achiev.get('level')
-    if not Area.objects.filter(name__exact=area):
-        arobj = Area(name=area)
-        arobj.save()
+    if not SubSubArea.objects.filter(ssarea__exact=ssarea):
+        ssarea = SubSubArea(ssarea=ssarea)
+        ssarea.save()
     else:
-        arobj = Area.objects.get(name=area)
-    if not SubArea.objects.filter(name__exact=subarea):
-        sbobj = SubArea(name=subarea, area=arobj)
-        sbobj.save()
+        ssarea = SubSubArea.objects.filter(ssarea=ssarea).first()
+    if not SubArea.objects.filter(sarea__exact=sarea):
+        sarea = SubArea(sarea=sarea)
+        sarea.save()
     else:
-        sbobj = SubArea.objects.get(name=subarea)
-    if not SubSubArea.objects.filter(name__exact=subsubarea):
-        ssbobj = SubSubArea(name=subsubarea, subarea=sbobj)
-        ssbobj.save()
+        sarea = SubArea.objects.get(sarea=sarea)
+    if not Area.objects.filter(area__exact=area):
+        area = Area(area=area)
+        area.save()
     else:
-        ssbobj = SubSubArea.objects.get(name=subsubarea)
-    if not Achiev.objects.filter(name__exact=ach_name):
+        area = Area.objects.filter(area=area).first()
+    if not ASSS.objects.filter(area__exact=area,
+                               sarea__exact=sarea,
+                               ssarea__exact=ssarea):
+        asss = ASSS(
+            area=area,
+            sarea=sarea,
+            ssarea=ssarea
+        )
+        asss.save()
+    else:
+        asss = ASSS.objects.filter(area__exact=area,
+                                   sarea__exact=sarea,
+                                   ssarea__exact=ssarea).first()
+    if not Achiev.objects.filter(name__exact=ach_name,
+                                 asss__exact=asss):
         a = Achiev(
             name=ach_name,
-            subsubarea=ssbobj,
+            asss=asss,
             level=level,
         )
         a.save()
