@@ -1,14 +1,18 @@
 from __future__ import absolute_import, unicode_literals
-from celery import task, shared_task, group
+from celery import task, shared_task
 from .models import Achiev, Area, SubArea, SubSubArea
 from openpyxl import load_workbook
-import time
 import os
+
+
+@task(name="erase_trash")
+def erase_trash(path_to_file):
+    os.remove(path_to_file)
 
 
 @task(name="create_achiev")
 def create_achiev(xlxs):
-    build_achiev.delay(xlxs)
+    (build_achiev.s(xlxs) | erase_trash.s(xlxs))
 
 
 @shared_task
