@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'stmenu.html' %}
+        <section class="blog-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="posts-content single-post">
+
+                        <article class="post-wrapper">
+
+                          <header class="entry-header-wrapper clearfix">
+
+                            <div class="entry-header">
+
+                              <h2 class="entry-title">Verificar Presenças</h2>
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}
+                            </div><!-- .entry-header -->
+
+                          </header><!-- /.entry-header-wrapper -->
+
+                          <div class="entry-content">
+                            <p style="text-align: center;">
+                            {% for sub in subject %}
+                              <button type="button" id="sub_{{ sub.pk }}" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
+                              {% if forloop.last %}
+                            </p>
+                            {% endif %}
+                            {% endfor %}
+
+                <div class="row mt-50">
+                <h3 id="subtable" style="text-align: center;"></h3>
+                    <div class="col-md-8 col-md-offset-2">
+
+                        <div class="mt-30" id="create_table">
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+
+
+
+
+                          </div><!-- .entry-content -->
+                      </article><!-- /.post-wrapper -->
+                    </div><!-- /.posts-content -->
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section>
+        {% endblock content %}
+{% block bellow_js %}
+<script>
+{% for s in subject %}
+    $("#sub_{{ s.pk }}").click(function () {
+      var subject = ( $(this).val() );
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_presents/',
+        data: {
+          subject: subject
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#subtable').html('Presenças de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
+          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
+          $.each(data, function(i, e){
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
+            } else {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
+            }
+          });
+        }
+      });
+    });
+    {% endfor %}
+  </script>
+{% endblock bellow_js %}

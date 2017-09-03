@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'stmenu.html' %}
+        <section class="blog-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                      <div class="posts-content single-post">
+
+                        <article class="post-wrapper">
+
+                          <header class="entry-header-wrapper clearfix">
+
+                            <div class="entry-header">
+
+                              <h2 class="entry-title">Marcar Presenças</h2>
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}
+                            </div><!-- .entry-header -->
+
+                          </header><!-- /.entry-header-wrapper -->
+
+                          <div class="entry-content">
+                            <form method='POST' action='' enctype='multipart/form-data' >
+                              {% csrf_token %}
+                              <p style="text-align: center;">
+                              {% for sub in subject %}
+                                <button type="button" id="sub_{{ sub.pk }}" name="subject" value='{{sub.pk}}' class="btn">{{ sub }}</button>
+                                {% if forloop.last %}
+                              </p>
+                              {% endif %}
+                              {% endfor %}
+                              <p style="text-align: center;"><label for="date">Data:</label> <input type="text" name="date" value="{% now "Y-m-j" %}" required id="date" class="datepicker" style="text-align: center;"/></p>
+                                <div class="fixed-action-btn">
+                                  <button class="btn-floating btn-large red z-depth-4 pulse" type="submit" name="action">
+                                    <i class="large material-icons">save</i>
+                                  </button>
+                                </div>
+                              <p id="grade" style="text-align: center;"></p>
+                              <p id="grid" style="text-align: center;"></p>
+                              <p id="subject" style="text-align: center;"></p>
+                            </form>
+                          </div><!-- .entry-content -->
+                      </article><!-- /.post-wrapper -->
+                    </div><!-- /.posts-content -->
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section>
+          <section class="section-padding">
+            <div class="container">
+
+            </div> <!-- container -->
+          </section> <!-- section-padding -->
+        {% endblock content %}
+{% block bellow_js %}
+<script type="text/javascript">
+          $('.datepicker').pickadate({
+            // Strings and translations
+            monthsFull: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+            monthsShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+            weekdaysFull: ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sabado'],
+            weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
+            // Buttons
+            today: 'Hoje',
+            clear: 'Limpar',
+            close: 'OK',
+            // Accessibility labels
+            labelMonthNext: 'Próximo',
+            labelMonthPrev: 'Anterior',
+            labelMonthSelect: 'Escolhe o Mês',
+            labelYearSelect: 'Escolhe o Ano',
+            // Formats
+            format: 'd mmmm, yyyy',
+            formatSubmit: 'yyyy-mm-dd',
+            hiddenSuffix: '_submit',
+            // Editable input
+            editable: false,
+            // Dropdown selectors
+            selectYears: 5,
+            selectMonths: true,
+            // Date limits
+            min: new Date(2015,01,01),
+            max: new Date({% now "Y,m,j" %}),
+            // Close on a user action
+            closeOnSelect: true,
+            closeOnClear: true,
+          });
+    </script>
+<script>
+{% for s in subject %}
+
+    $("#sub_{{ s.pk }}").click(function () {
+      var subject = ( $(this).val() );
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_students/',
+        data: {
+          subject: subject,
+        },
+        dataType: 'json',
+        success: function (data) {
+          // var $div = $('<div>').append(
+          //         $('<input type="hidden" name="grade" value="' + data.class.grade + '" />')).appendTo('#grade');
+          // var $div = $('<div>').append(
+          //         $('<input type="hidden" name="subject" value="' + data.class.subject + '" />')).appendTo('#subject');
+          $('#grade').html('<input type="hidden" name="grade" value="' + data.class.grade + '" />');
+          $('#subject').html('<input type="hidden" name="subject" value="' + data.class.subject + '" />');
+          $('#grid').html('<ul id="blogGrid" class="ulpresent">');
+          $.each(data.student, function(i, e){
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $li = $('<li class="lipresent">').append(
+                $('<input class="presinput" name="' + e.id + '" type="checkbox" value="1" id="' + e.id + '"/><label class="preslabel" for="' + e.id + '" style="text-align: center;"><img src="' + e.jpg + '"/><br />' + e.name + '</label></ul>')).appendTo('#blogGrid');
+            } else {
+              var $li = $('<li class="lipresent">').append(
+                $('<input class="presinput" name="' + e.id + '" type="checkbox" value="1" id="' + e.id + '"/><label class="preslabel" for="' + e.id + '" style="text-align: center;"><img src="' + e.jpg + '"/><br />' + e.name + '</label>')).appendTo('#blogGrid');
+            }
+
+          });
+        }
+      });
+    });
+{% endfor %}
+  </script>
+{% endblock bellow_js %}
