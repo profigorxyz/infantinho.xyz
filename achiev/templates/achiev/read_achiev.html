@@ -27,12 +27,13 @@
 
                           <div class="entry-content">
                           {% if is_teacher %}
-                            <p style="text-align: center;">
                             {% for g in grades %}
-                              <button type="button" id="g_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }}</button>
-                              {% if forloop.last %}
+                            <p style="text-align: center;">
+                              <button type="button" id="g1_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 1</button>
+                              <button type="button" id="g2_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 2</button>
+                              <button type="button" id="g3_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 3</button>
+                              <button type="button" id="g4_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 4</button>
                             </p>
-                            {% endif %}
                             {% endfor %}
                           {% endif %}
                           {% if not is_teacher %}
@@ -67,15 +68,102 @@
         {% endblock content %}
 {% block bellow_js %}
 <script>
+{% if is_teacher %}
 {% for g in grades %}
-    $("#g_{{ g.id }}").click(function () {
+    $("#g1_{{ g.id }}").click(function () {
       var grade = ( $(this).val() );
+      var level = 1;
 
       $.ajax({
         type: 'GET',
-        url: '/ajax/get_presents/',
+        url: '/ajax/get_achiev/',
         data: {
-          subject: subject
+          grade: grade,
+          level: 1,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
+          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
+          $.each(data, function(i, e){
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
+            } else {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
+            }
+          });
+        }
+      });
+    });
+        $("#g2_{{ g.id }}").click(function () {
+      var grade = ( $(this).val() );
+      var level = 1;
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_achiev/',
+        data: {
+          grade: grade,
+          level: 2,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
+          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
+          $.each(data, function(i, e){
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
+            } else {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
+            }
+          });
+        }
+      });
+    });
+        $("#g3_{{ g.id }}").click(function () {
+      var grade = ( $(this).val() );
+      var level = 3;
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_achiev/',
+        data: {
+          grade: grade,
+          level: 1,
+        },
+        dataType: 'json',
+        success: function (data) {
+          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
+          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
+          $.each(data, function(i, e){
+            var isLastElement = i == data.length -1;
+            if (isLastElement) {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
+            } else {
+              var $tr = $('<tr>').append(
+                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
+            }
+          });
+        }
+      });
+    });
+        $("#g4_{{ g.id }}").click(function () {
+      var grade = ( $(this).val() );
+      var level = 4;
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_achiev/',
+        data: {
+          grade: grade,
+          level: 1,
         },
         dataType: 'json',
         success: function (data) {
@@ -95,5 +183,6 @@
       });
     });
     {% endfor %}
+    {% endif %}
   </script>
 {% endblock bellow_js %}

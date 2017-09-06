@@ -397,14 +397,20 @@ def build_achiev(**kwargs):
     ]).values('id', 'name')
 
 
-def get_achiev(**kwargs):
+@login_required(login_url='/login/google-oauth2/?next=/')
+def get_achiev(request):
     # student, area, sarea, ssarea, achiev
-    level = kwargs.get('level', None)
-    student = kwargs.get('student', None)
-    grade = kwargs.get('grade', None)
-    area = kwargs.get('area', None)
-    sarea = kwargs.get('sarea', None)
-    ssarea = kwargs.get('ssarea', None)
+    level = request.GET.get('level', None)
+    student = request.GET.get('student', None)
+    grade = request.GET.get('grade', None)
+    area = request.GET.get('area', None)
+    sarea = request.GET.get('sarea', None)
+    ssarea = request.GET.get('ssarea', None)
+    if not level:
+        messages.error(request,
+                       'Ocorreu um erro inesperado,\
+                        por favor tente mais tarde')
+        return render(request, 'blank.html')
     jsondump = {
         'sort_keys': True,
     }
@@ -427,6 +433,7 @@ def get_achiev(**kwargs):
                     'xp': get_xp(
                         student=student_id,
                         area=area_id),
+                    'max_xp': get_xp(area=area_id)
                 }
         return JsonResponse(data, json_dumps_params=jsondump)
     if student:
@@ -435,6 +442,7 @@ def get_achiev(**kwargs):
                 sarea_id = a.get('asss__sarea')
                 sarea_name = a.get('asss__sarea__sarea')
                 data[sarea_id] = {
+                    'id': sarea_id,
                     'name': sarea_name,
                     'xp': get_xp(student=student, sarea=sarea_id),
                     'max_xp': get_xp(sarea=sarea_id)
@@ -450,6 +458,7 @@ def get_achiev(**kwargs):
                     achiev_id = a.get('id')
                     achiev_name = a.get('name')
                     data[str(achiev_id)] = {
+                        'id': achiev_id,
                         'name': achiev_name,
                         'xp': get_xp(student=student, achiev=achiev_id),
                         'max_xp': 4
@@ -461,6 +470,7 @@ def get_achiev(**kwargs):
                 ssarea_id = a.get('asss__ssarea')
                 ssarea_name = a.get('asss__ssarea__ssarea')
                 data[ssarea_id] = {
+                    'id': ssarea_id,
                     'name': ssarea_name,
                     'xp': get_xp(student=student, ssarea=ssarea_id),
                     'max_xp': get_xp(ssarea=ssarea_id)
@@ -475,6 +485,7 @@ def get_achiev(**kwargs):
             achiev_id = a.get('id')
             achiev_name = a.get('name')
             data[str(achiev_id)] = {
+                'id': achiev_id,
                 'name': achiev_name,
                 'xp': get_xp(student=student, achiev=achiev_id),
                 'max_xp': 4

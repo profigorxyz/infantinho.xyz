@@ -32,20 +32,6 @@ def upload_achiev(request):  # Create
 
 @login_required(login_url='/login/google-oauth2/?next=/')
 def read_achiev(request):
-    areas = [
-        {
-            'id': 0,
-            'area': 'Matemática'
-        },
-        {
-            'id': 1,
-            'area': 'Português'
-        },
-        {
-            'id': 2,
-            'area': 'Estudo do Meio'
-        }
-    ]
     teacher = Teacher.objects.filter(user__exact=request.user.id).first()
     if teacher:
         subject = Subject.objects.filter(
@@ -59,10 +45,11 @@ def read_achiev(request):
         teacher = 1
     else:
         grades = None
+    student = Student.objects.filter(user__exact=request.user.id).first()
     context = {
+        'is_student': student,
         'is_teacher': teacher,
         'grades': grades,
-        'areas': areas,
     }
     return render(request, 'achiev/read_achiev.html', context)
 
