@@ -1,0 +1,13 @@
+#!/bin/sh
+echo "manage check"
+./manage.py check
+echo "done"
+echo "stoping celery..."
+sudo service celery stop
+echo "done"
+echo "restarting apache2..."
+sudo service apache2 restart
+echo "done"
+echo "starting celery"
+sudo service celery start
+echo "done"

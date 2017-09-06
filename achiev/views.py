@@ -32,30 +32,39 @@ def upload_achiev(request):  # Create
 
 @login_required(login_url='/login/google-oauth2/?next=/')
 def read_achiev(request):
-    areas = {
-        '0': {
+    areas = [
+        {
             'id': 0,
             'area': 'Matemática'
         },
-        '1': {
+        {
             'id': 1,
             'area': 'Português'
         },
-        '2': {
+        {
             'id': 2,
             'area': 'Estudo do Meio'
         }
-    }
+    ]
     teacher = Teacher.objects.filter(user__exact=request.user.id).first()
     if teacher:
-        subject = Subject.objects.filter(teacher__user=request.user.id)
-        grades = [{str(v): v} for v in subject.values('grade')]
-        raise
+        subject = Subject.objects.filter(
+            teacher__user=request.user.id
+        ).order_by('grade__name')
+        grades = list()
+        [grades.append({'id': subject[n].grade_id,
+                        'grade': str(subject[n].grade)}
+                       )
+            for n in range(subject.count())]
+        teacher = 1
+    else:
+        grades = None
     context = {
+        'is_teacher': teacher,
         'grades': grades,
         'areas': areas,
     }
-    return render(request, 'achiev/read_skill.html', context)
+    return render(request, 'achiev/read_achiev.html', context)
 
 
 @login_required(login_url='/login/google-oauth2/?next=/')
