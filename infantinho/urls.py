@@ -29,9 +29,19 @@ urlpatterns = [
     url(r'^blog/', include('blog.urls', namespace='blog')),
     url(r'^record/', include('record.urls', namespace='record')),
     url(r'^herd/', include('herd.urls', namespace='herd')),
+    url(r'^achiev/', include('achiev.urls', namespace='achiev')),
     url(r'^ajax/', include('ajax.urls', namespace='ajax')),
     url('', include('social_django.urls', namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
-    url(r'^terms/$', TemplateView.as_view(template_name="terms.txt", content_type="text/plain"), name="terms"),
-    url(r'^robots.txt$', TemplateView.as_view(template_name="robots.txt", content_type="text/plain"), name="robots"),
+    url(r'^terms/$',
+        TemplateView.as_view(
+            template_name="terms.txt",
+            content_type="text/plain"
+        ),
+        name="terms"),
+    url(r'^robots.txt$',
+        TemplateView.as_view(
+            template_name="robots.txt",
+            content_type="text/plain"),
+        name="robots"),
 ]

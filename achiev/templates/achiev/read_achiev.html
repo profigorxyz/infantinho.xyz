@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+  {% block headcontent %}
+  {% load staticfiles %}
+   {% load material_form %}
+  {% endblock headcontent%}
+        {% block content %}
+        {% include 'stmenu.html' %}
+        <section class="section-padding banner-6 bg-fixed parallax-bg overlay light-9" data-stellar-background-ratio="0.5">
+            <div class="container">
+
+            {% if messages %}
+              <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
+            {% endif %}
+
+                <div class="text-center mb-80 wow fadeInUp">
+                  <h2 class="section-title text-uppercase">Listas de Verificação</h2>
+                  <p class="section-sub">A wise man can learn more from a foolish question than a fool can learn from a wise answer. <small>Bruce Lee</small></p>
+                </div>
+
+                          {% if is_teacher %}
+                            <p style="text-align: center;">
+                            {% for g in grades %}
+                              <button type="button" id="g_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }}</button>
+                            {% endfor %}
+                            </p>
+                          {% endif %}
+                          {% for i in range %}
+              <div class="featured-carousel brand-dot">
+                  <div class="featured-item border-box radius-4 hover brand-hover">
+                          <div class="icon mb-30" id="jpg_{{ i }}">
+                          </div>
+                      <div class="desc">
+                          <h2 id="name_{{ i }}"></h2>
+                          <p id="area_{{ i }}"></p>
+                      </div>
+                  </div><!-- /.featured-item -->
+                        {% endfor %}
+              </div>
+
+            </div><!-- /.container -->
+        </section>
+        {% endblock content %}
+{% block bellow_js %}
+<script>
+{% if is_teacher %}
+{% for g in grades %}
+    $("#g_{{ g.id }}").click(function () {
+      var grade = ( $(this).val() );
+
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/get_achiev/',
+        data: {
+          grade: grade,
+          level: 2,
+        },
+        dataType: 'json',
+        success: function (data) {
+          var count = 0;
+          $.each(data, function(i, e){
+            $('<a href="#" />').append('<img src="'+ e.jpg +'" alt="'+ e.name +'" height="100px">').appendTo('#jpg_'+ count);
+            $('#name_' + count).html(e.name)
+            $.each(e.areas, function (i, e){
+              $('#area_'+ count).html(e.name +' '+ e.xp +' de '+ e.max_xp +' pontos <br />')
+            })
+          });
+        }
+      });
+    });
+    {% endfor %}
+    {% endif %}
+  </script>
+{% endblock bellow_js %}

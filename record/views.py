@@ -78,62 +78,6 @@ def pres_print(request):
     }
     return render(request, 'record/print_pres.html', context)
 
-
-@login_required(login_url='/login/google-oauth2/?next=/')
-def skill_create(request):
-    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
-    if not teacher:
-        messages.error(request, 'Tem de ter\
-            autorização para poder verificar presenças.')
-        return render(request, 'blank.html')
-    subject = Subject.objects.filter(teacher__user=request.user.id)
-    context = {
-        'subject': subject,
-    }
-    return render(request, 'record/read_pres.html', context)
-
-
-@login_required(login_url='/login/google-oauth2/?next=/')
-def skill_read(request):
-    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
-    if not teacher:
-        messages.error(request, 'Tem de ter\
-            autorização para poder verificar presenças.')
-        return render(request, 'blank.html')
-    subject = Subject.objects.filter(teacher__user=request.user.id)
-    context = {
-        'subject': subject,
-    }
-    return render(request, 'record/read_skill.html', context)
-
-
-@login_required(login_url='/login/google-oauth2/?next=/')
-def skill_update(request):
-    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
-    if not teacher:
-        messages.error(request, 'Tem de ter\
-            autorização para poder verificar presenças.')
-        return render(request, 'blank.html')
-    subject = Subject.objects.filter(teacher__user=request.user.id)
-    context = {
-        'subject': subject,
-    }
-    return render(request, 'record/update_skill.html', context)
-
-
-@login_required(login_url='/login/google-oauth2/?next=/')
-def skill_delete(request):
-    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
-    if not teacher:
-        messages.error(request, 'Tem de ter\
-            autorização para poder verificar presenças.')
-        return render(request, 'blank.html')
-    subject = Subject.objects.filter(teacher__user=request.user.id)
-    context = {
-        'subject': subject,
-    }
-    return render(request, 'record/delete_skill.html', context)
-
     # if now.month < 3:
     #     end_month = datetime.date(now.year, 7, 1)
     #     start_date = datetime.date(now.year - 1, 9, 1)

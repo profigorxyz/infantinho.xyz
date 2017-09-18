@@ -15,7 +15,16 @@
                         <!--mega menu start-->
                         <ul class="menuzord-menu light">
                             {% if request.user.is_superuser %}
-                            <li><a href="{% url 'herd:upload' %}">Upload</a></li>
+                            <li><a href="javascript:void(0)">Admin</a>
+                                <ul class="dropdown">
+                                <li><a href="{% url 'admin:index' %}">Admin</a>
+                                    </li>
+                                    <li><a href="{% url 'herd:upload' %}">Upload Alunos</a>
+                                    </li>
+                                    <li><a href="{% url 'achiev:upload' %}">Upload Achievs</a>
+                                    </li>
+                                </ul>
+                            </li>
                             {% endif %}
                             <li><a href="javascript:void(0)">Blogue</a>
                                 <ul class="dropdown">
