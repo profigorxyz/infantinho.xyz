@@ -140,10 +140,20 @@ def get_students(request):
     grade = request.GET.get('grade', None)
     subject = request.GET.get('subject', None)
     if not grade:
-        sub = Subject.objects.filter(pk__exact=subject).first()
-        grade = [gpk.get('pk') for gpk in Subject.objects.filter(pk__exact=subject).values('pk')]
-    sts = Student.objects.filter(
-        grade__in=grade).order_by('grade', 'user__first_name', 'user__last_name')
+        sub = Subject.objects.filter(pk=subject).first()
+        grade = [
+            gpk.get('pk')
+            for gpk in sub.grade.values('pk')
+        ]
+    if sub.club is True:
+        sts = Student.objects.filter(club=sub.id)
+    else:
+        sts = Student.objects.filter(
+            grade__in=grade).order_by(
+                'grade',
+                'user__first_name',
+                'user__last_name'
+        )
     allgd = Grade.objects.all()
     grades = {}
     students = {}
@@ -157,15 +167,26 @@ def get_students(request):
     for student in sts:
         if first:
             first = False
-            team['grade'] = student.grade_id
-            team['subject'] = subject
-            team['name'] = student.grade.name
+            gname = student.grade.name
+            team[gname] = {}
+            team[gname]['grade'] = student.grade_id
+            team[gname]['subject'] = subject
+            team[gname]['name'] = student.grade.name
+        else:
+            ngname = student.grade.name
+            if ngname != gname:
+                gname = student.grade.name
+                team[gname] = {}
+                team[gname]['grade'] = student.grade_id
+                team[gname]['subject'] = subject
+                team[gname]['name'] = student.grade.name
         name = ''.join('{}'.format(student).split())
         name = unidecode(name)
         students['{}'.format(name)] = {
             'id': student.id,
             'name': '{}'.format(student).upper(),
             'jpg': student.photo.face.url,
+            'team': student.grade.name
         }
     data = {
         'grade': grades,
