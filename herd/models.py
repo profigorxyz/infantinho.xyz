@@ -13,10 +13,13 @@ class Grade(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=20)
-    grade = models.ForeignKey(Grade)
+    grade = models.ManyToManyField(Grade)
+    club = models.NullBooleanField()
 
     def __str__(self):
-        return '{} {}'.format(self.name, self.grade.name)
+        grade = [n.get('name') for n in self.grade.values('name')]
+        grade = ''.join(grade)
+        return '{} {}'.format(self.name, grade)
 
 
 class Teacher(models.Model):
@@ -38,6 +41,8 @@ class Student(models.Model):
                           blank=True,
                           upload_to=UploadToUUID(path='students'),
                           variations={'face': (300, 300)})
+    club = models.ManyToManyField(Subject,
+                                  blank=True)
 
     def __str__(self):
         return '{} {}'.format(self.user.first_name,

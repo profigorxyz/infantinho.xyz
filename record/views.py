@@ -22,9 +22,14 @@ def pres_create(request):
         'subject': subject,
     }
     if request.method == 'POST':
-        students = Student.objects.filter(grade__exact=request.POST['grade'])
-        date = request.POST['date_submit'].split('\'')[0]
         subject = Subject.objects.get(id=request.POST['subject'])
+        if subject.club is True:
+            students = Student.objects.filter(club__subject__id=subject.id)
+        else:
+            students = Student.objects.filter(
+                grade__exact=request.POST['grade']
+            )
+        date = request.POST['date_submit'].split('\'')[0]
         for student in students:
             try:
                 if request.POST[str(student.id)]:
