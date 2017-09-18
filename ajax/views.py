@@ -141,9 +141,9 @@ def get_students(request):
     subject = request.GET.get('subject', None)
     if not grade:
         sub = Subject.objects.filter(pk__exact=subject).first()
-        grade = Grade.objects.filter(pk__exact=sub.grade_id).first()
+        grade = [gpk.get('pk') for gpk in Subject.objects.filter(pk__exact=subject).values('pk')]
     sts = Student.objects.filter(
-        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+        grade__in=grade).order_by('grade', 'user__first_name', 'user__last_name')
     allgd = Grade.objects.all()
     grades = {}
     students = {}
