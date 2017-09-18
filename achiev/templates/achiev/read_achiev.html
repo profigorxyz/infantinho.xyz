@@ -5,64 +5,38 @@
   {% endblock headcontent%}
         {% block content %}
         {% include 'stmenu.html' %}
-        <section class="blog-section section-padding">
+        <section class="section-padding banner-6 bg-fixed parallax-bg overlay light-9" data-stellar-background-ratio="0.5">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                      <div class="posts-content single-post">
 
-                        <article class="post-wrapper">
-
-                          <header class="entry-header-wrapper clearfix">
-
-                            <div class="entry-header">
-
-                              <h2 class="entry-title">Listas de Verificação</h2>
             {% if messages %}
               <p><h2 class="entry-title"><small>{% include 'sms.html' %}</small></h2></p>
             {% endif %}
-                            </div><!-- .entry-header -->
 
-                          </header><!-- /.entry-header-wrapper -->
+                <div class="text-center mb-80 wow fadeInUp">
+                  <h2 class="section-title text-uppercase">Listas de Verificação</h2>
+                  <p class="section-sub">A wise man can learn more from a foolish question than a fool can learn from a wise answer. <small>Bruce Lee</small></p>
+                </div>
 
-                          <div class="entry-content">
                           {% if is_teacher %}
+                            <p style="text-align: center;">
                             {% for g in grades %}
-                            <p style="text-align: center;">
-                              <button type="button" id="g1_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 1</button>
-                              <button type="button" id="g2_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 2</button>
-                              <button type="button" id="g3_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 3</button>
-                              <button type="button" id="g4_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }} - lvl 4</button>
-                            </p>
+                              <button type="button" id="g_{{ g.id }}" name="grade" value='{{ g.id }}' class="btn">{{ g.grade }}</button>
                             {% endfor %}
-                          {% endif %}
-                          {% if not is_teacher %}
-                            <p style="text-align: center;">
-                            {% for a in areas %}
-                              <button type="button" id="a_{{ a.id }}" name="area" value='{{a.id}}' class="btn">{{ a.area }}</button>
-                              {% if forloop.last %}
                             </p>
-                            {% endif %}
-                            {% endfor %}
                           {% endif %}
+                          {% for i in range %}
+              <div class="featured-carousel brand-dot">
+                  <div class="featured-item border-box radius-4 hover brand-hover">
+                          <div class="icon mb-30" id="jpg_{{ i }}">
+                          </div>
+                      <div class="desc">
+                          <h2 id="name_{{ i }}"></h2>
+                          <p id="area_{{ i }}"></p>
+                      </div>
+                  </div><!-- /.featured-item -->
+                        {% endfor %}
+              </div>
 
-                <div class="row mt-50">
-                <h3 id="subtable" style="text-align: center;"></h3>
-                    <div class="col-md-8 col-md-offset-2">
-
-                        <div class="mt-30" id="create_table">
-                        </div>
-                    </div>
-                </div><!-- /.row -->
-
-
-
-
-                          </div><!-- .entry-content -->
-                      </article><!-- /.post-wrapper -->
-                    </div><!-- /.posts-content -->
-                  </div><!-- /.col-md-12 -->
-                </div><!-- /.row -->
             </div><!-- /.container -->
         </section>
         {% endblock content %}
@@ -70,37 +44,8 @@
 <script>
 {% if is_teacher %}
 {% for g in grades %}
-    $("#g1_{{ g.id }}").click(function () {
+    $("#g_{{ g.id }}").click(function () {
       var grade = ( $(this).val() );
-      var level = 1;
-
-      $.ajax({
-        type: 'GET',
-        url: '/ajax/get_achiev/',
-        data: {
-          grade: grade,
-          level: 1,
-        },
-        dataType: 'json',
-        success: function (data) {
-          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
-          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
-          $.each(data, function(i, e){
-            var isLastElement = i == data.length -1;
-            if (isLastElement) {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
-            } else {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
-            }
-          });
-        }
-      });
-    });
-        $("#g2_{{ g.id }}").click(function () {
-      var grade = ( $(this).val() );
-      var level = 1;
 
       $.ajax({
         type: 'GET',
@@ -111,73 +56,13 @@
         },
         dataType: 'json',
         success: function (data) {
-          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
-          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
+          var count = 0;
           $.each(data, function(i, e){
-            var isLastElement = i == data.length -1;
-            if (isLastElement) {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
-            } else {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
-            }
-          });
-        }
-      });
-    });
-        $("#g3_{{ g.id }}").click(function () {
-      var grade = ( $(this).val() );
-      var level = 3;
-
-      $.ajax({
-        type: 'GET',
-        url: '/ajax/get_achiev/',
-        data: {
-          grade: grade,
-          level: 1,
-        },
-        dataType: 'json',
-        success: function (data) {
-          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
-          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
-          $.each(data, function(i, e){
-            var isLastElement = i == data.length -1;
-            if (isLastElement) {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
-            } else {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
-            }
-          });
-        }
-      });
-    });
-        $("#g4_{{ g.id }}").click(function () {
-      var grade = ( $(this).val() );
-      var level = 4;
-
-      $.ajax({
-        type: 'GET',
-        url: '/ajax/get_achiev/',
-        data: {
-          grade: grade,
-          level: 1,
-        },
-        dataType: 'json',
-        success: function (data) {
-          $('#subtable').html('Pontos por Áreas de ' + data[0].subject + ' de ' + data[0].start_date + ' a ' + data[0].end_date + '.');
-          $('#create_table').html('<table class="table table-striped"><tr><thead><th>Nome</th><th>Presenças</th><th>Faltas</th></thead><tbody id="tbody"></tbody>');
-          $.each(data, function(i, e){
-            var isLastElement = i == data.length -1;
-            if (isLastElement) {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td></table>')).appendTo('#tbody');
-            } else {
-              var $tr = $('<tr>').append(
-                $('<th scope="row">' + e.name + '</th><td>' + e.pres + '</td><td>' + e.absent + '</td>')).appendTo('#tbody');
-            }
+            $('<a href="#" />').append('<img src="'+ e.jpg +'" alt="'+ e.name +'" height="100px">').appendTo('#jpg_'+ count);
+            $('#name_' + count).html(e.name)
+            $.each(e.areas, function (i, e){
+              $('#area_'+ count).html(e.name +' '+ e.xp +' de '+ e.max_xp +' pontos <br />')
+            })
           });
         }
       });

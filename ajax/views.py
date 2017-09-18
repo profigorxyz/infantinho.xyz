@@ -37,7 +37,8 @@ def build_students(**kwargs):
             data['team']['grade'] = student.grade_id
             data['team']['subject'] = subject
             data['team']['name'] = student.grade.name
-        name = '{}'.format(student.number)
+        striped_name = ''.join(str(student).split())
+        name = '{}{}'.format(striped_name, student.number)
         data['students'][name] = {
             'id': student.id,
             'name': '{}'.format(student).upper(),
@@ -421,20 +422,26 @@ def get_achiev(request):
         for student in list(idata['students']):
             student_id = idata['students'][student].get('id')
             student_name = idata['students'][student].get('name')
+            jpg = idata['students'][student].get('jpg')
             data[student] = {
+                'id': student_id,
                 'name': student_name,
                 'xp': get_xp(student=student_id),
+                'jpg': jpg,
+                'areas': [],
             }
+            n = 0
             for area in list(build_achiev(level=level)):
                 area_id = area.get('asss__area__id')
-                data[student][str(area_id)] = {
+                data[student]['areas'].append({
                     'id': area_id,
                     'name': Area.objects.get(id=area_id).get_area_display(),
                     'xp': get_xp(
                         student=student_id,
                         area=area_id),
                     'max_xp': get_xp(area=area_id)
-                }
+                })
+                n += 1
         return JsonResponse(data, json_dumps_params=jsondump)
     if student:
         if not sarea:

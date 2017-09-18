@@ -45,11 +45,13 @@ def read_achiev(request):
         teacher = 1
     else:
         grades = None
+    n = [n for n in range(23)]
     student = Student.objects.filter(user__exact=request.user.id).first()
     context = {
         'is_student': student,
         'is_teacher': teacher,
         'grades': grades,
+        'range': n,
     }
     return render(request, 'achiev/read_achiev.html', context)
 
