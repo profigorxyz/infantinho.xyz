@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^create/$', views.pres_create, name='create'),
     url(r'^read/$', views.pres_read, name='read'),
     url(r'^print/$', views.pres_print, name='print'),
+    url(r'^create_proj/$', views.create_proj, name='create_project'),
     # url(r'^(?P<slug>[\w-]+)/$', views.post_detail, name='detail'),
     # url(r'^(?P<slug>[\w-]+)/edit/$', views.post_update, name='edit'),
     # url(r'^(?P<slug>[\w-]+)/delete/$', views.post_delete),

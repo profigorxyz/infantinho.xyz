@@ -78,6 +78,22 @@ def pres_print(request):
     }
     return render(request, 'record/print_pres.html', context)
 
+
+@login_required(login_url='/login/google-oauth2/?next=/')
+def create_proj(request):
+    teacher = Teacher.objects.filter(user__exact=request.user.id).first()
+    if not teacher:
+        student = Student.objects.filter(user__exact=request.user.id).first()
+        if not student:
+            messages.error(request, 'Tem de ter \
+                        autorização para criar um projeto.')
+            return render(request, 'blank.html')
+    context = {
+    }
+    if request.method == 'POST':
+        return 0
+    return render(request, 'record/create_proj.html', context)
+
     # if now.month < 3:
     #     end_month = datetime.date(now.year, 7, 1)
     #     start_date = datetime.date(now.year - 1, 9, 1)
