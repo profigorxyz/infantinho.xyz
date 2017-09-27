@@ -12,6 +12,7 @@ import shutil
 import calendar
 from django.core.files.images import ImageFile
 from django.core.files.storage import FileSystemStorage
+from django.core.files import File
 from django.conf import settings
 from django.core.mail import EmailMessage
 from record.models import PresRec
@@ -33,12 +34,12 @@ def send_report(emailto, subject_id):
     now = datetime.datetime.now()
     mdays = calendar.monthrange(now.year, now.month)[1]
     weekday = calendar.weekday(now.year, now.month, now.day)
-    if mdays != now.day and weekday > 4:
-        return 0
-    elif weekday != 4 and mdays - now.day > 2:
-        return 1
-    elif now.hour != 10 and now.minute <= 10 and now.minute > 15:
-        return 2
+    # if mdays != now.day and weekday > 4:
+    #     return 0
+    # elif weekday != 4 and mdays - now.day > 2:
+    #     return 1
+    # elif now.hour != 10 and now.minute <= 10 and now.minute > 15:
+    #     return 2
     start_date = datetime.date(now.year, now.month, 1)
     end_date = datetime.date(now.year, now.month, mdays)
     studic = []
@@ -69,6 +70,40 @@ def send_report(emailto, subject_id):
                       }
                       )
     jsoncontent = json.dumps(studic)
+    import openpyxl
+    wb = openpyxl.Workbook()
+    ws = wb.get_active_sheet()
+    ws.title = 'pres'
+    row_num = 0
+    columns = [
+        (u'Número', 15),
+        (u'Nome', 70),
+        (u'Presenças', 15),
+        (u'Faltas', 15)
+    ]
+    for col_num in range(len(columns)):
+        c = ws.cell(row=row_num + 1, column=col_num + 1)
+        c.value = columns[col_num][0]
+        # c.style.font.bold = True
+        # ws.column_dimensions[
+        #     col_num + 1
+        # ].width = str(columns[col_num][1])
+    for e in studic:
+        row_num += 1
+        row = [
+            str(e.get('number')),
+            str(e.get('name')),
+            str(e.get('pres')),
+            str(e.get('absent')),
+        ]
+        for col_num in range(len(row)):
+            c = ws.cell(row=row_num + 1, column=col_num + 1)
+            c.value = row[col_num]
+            # c.style.alignment.wrap_text = True
+    f = open('pres.xlsx', mode='wb+')
+    f = File(f)
+    wb.save(f)
+    email.attach('pres.xlsx', f.read(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.attach('pres.json', jsoncontent, 'application/json')
     email.send()
     pass
