@@ -1,15 +1,77 @@
 from __future__ import absolute_import, unicode_literals
 from celery import task, shared_task
 from django.contrib.auth.models import User
-from .models import Student, Grade
+from .models import Student, Grade, Subject
 from openpyxl import load_workbook
 import zipfile
 import os
+import datetime
+import json
 import glob
 import shutil
+import calendar
 from django.core.files.images import ImageFile
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.core.mail import EmailMessage
+from record.models import PresRec
+
+
+@shared_task
+def send_report(emailto, subject_id):
+    email = EmailMessage(
+        'Relatório de Presenças',
+        'Segue em anexo o relatório de presenças deste mês.',
+        'infantinho@colegioinfante.info',
+        emailto,
+    )
+    subject = subject_id
+    subject = Subject.objects.get(pk__exact=subject)
+    grade = [pk.get('pk') for pk in subject.grade.values('pk')]
+    students = Student.objects.filter(
+        grade__in=grade).order_by('number')
+    now = datetime.datetime.now()
+    mdays = calendar.monthrange(now.year, now.month)[1]
+    weekday = calendar.weekday(now.year, now.month, now.day)
+    if mdays != now.day and weekday > 4:
+        return 0
+    elif weekday != 4 and mdays - now.day > 2:
+        return 1
+    elif now.hour != 10 and now.minute <= 10 and now.minute > 15:
+        return 2
+    start_date = datetime.date(now.year, now.month, 1)
+    end_date = datetime.date(now.year, now.month, mdays)
+    studic = []
+    for student in students:
+        pres = PresRec.objects.filter(
+            subject__exact=subject,
+            student__user__exact=student.user,
+            date__range=[
+                start_date,
+                end_date
+            ],
+            is_absent=0).count()
+        absent = PresRec.objects.filter(
+            subject__exact=subject,
+            student__user__exact=student.user,
+            date__range=[
+                start_date,
+                end_date
+            ],
+            is_absent=1).count()
+        studic.append({
+                      'name': '{}'.format(student),
+                      'number': student.number,
+                      'pres': pres,
+                      'absent': absent,
+                      'start_date': str(start_date),
+                      'end_date': str(end_date),
+                      }
+                      )
+    jsoncontent = json.dumps(studic)
+    email.attach('pres.json', jsoncontent, 'application/json')
+    email.send()
+    pass
 
 
 @shared_task
