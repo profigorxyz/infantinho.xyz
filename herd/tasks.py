@@ -72,40 +72,40 @@ def send_report(emailto, subject_id):
     jsoncontent = json.dumps(studic)
     import openpyxl
     wb = openpyxl.Workbook()
-    ws = wb.get_active_sheet()
+    ws = wb.active
     ws.title = 'pres'
     row_num = 0
     columns = [
-        (u'Número', 15),
-        (u'Nome', 70),
-        (u'Presenças', 15),
-        (u'Faltas', 15)
+        (u'Número', 6, 'A'),
+        (u'Nome', 25, 'B'),
+        (u'Presenças', 7, 'C'),
+        (u'Faltas', 7, 'D')
     ]
     for col_num in range(len(columns)):
         c = ws.cell(row=row_num + 1, column=col_num + 1)
         c.value = columns[col_num][0]
-        # c.style.font.bold = True
-        # ws.column_dimensions[
-        #     col_num + 1
-        # ].width = str(columns[col_num][1])
+        c.font = openpyxl.styles.fonts.Font(bold=True)
+        ws.column_dimensions[columns[col_num][2]].width = columns[col_num][1]
     for e in studic:
         row_num += 1
         row = [
-            str(e.get('number')),
-            str(e.get('name')),
-            str(e.get('pres')),
-            str(e.get('absent')),
+            e.get('number'),
+            e.get('name'),
+            e.get('pres'),
+            e.get('absent'),
         ]
         for col_num in range(len(row)):
             c = ws.cell(row=row_num + 1, column=col_num + 1)
             c.value = row[col_num]
-            # c.style.alignment.wrap_text = True
-    f = open('pres.xlsx', mode='wb+')
+    fs = FileSystemStorage()
+    f = fs.open('pres.xlsx', mode='wb+')
     f = File(f)
     wb.save(f)
-    email.attach('pres.xlsx', f.read(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    f.close
     email.attach('pres.json', jsoncontent, 'application/json')
+    email.attach_file(os.path.join(settings.MEDIA_ROOT, 'pres.xlsx'))
     email.send()
+    os.remove(os.path.join(settings.MEDIA_ROOT, 'pres.xlsx'))
     pass
 
 
