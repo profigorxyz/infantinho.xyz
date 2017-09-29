@@ -19,14 +19,18 @@ from record.models import PresRec
 
 
 @shared_task
-def send_report(emailto, subject_id):
+def send_report():
     email = EmailMessage(
         'Relatório de Presenças',
         'Segue em anexo o relatório de presenças deste mês.',
         'infantinho@colegioinfante.info',
-        emailto,
+        [
+            'prof.igor@colegioinfante.info',
+            'jorge@colegioinfante.info',
+            'secretariaph@gmail.com',
+        ],
     )
-    subject = subject_id
+    subject = 20
     subject = Subject.objects.get(pk__exact=subject)
     grade = [pk.get('pk') for pk in subject.grade.values('pk')]
     students = Student.objects.filter(
@@ -34,12 +38,12 @@ def send_report(emailto, subject_id):
     now = datetime.datetime.now()
     mdays = calendar.monthrange(now.year, now.month)[1]
     weekday = calendar.weekday(now.year, now.month, now.day)
-    # if mdays != now.day and weekday > 4:
-    #     return 0
-    # elif weekday != 4 and mdays - now.day > 2:
-    #     return 1
-    # elif now.hour != 10 and now.minute <= 10 and now.minute > 15:
-    #     return 2
+    if mdays != now.day and weekday != 4:
+        return 'not lastday, and not friday day: {}'.format(now.day)
+    elif mdays - now.day > 2:
+        return 'not last friday of the month, day: {}'.format(now.day)
+    elif now.hour != 10 and now.minute <= 10 or now.minute > 15:
+        return 'last friday but time is: {}:{}'.format(now.hour, now.minute)
     start_date = datetime.date(now.year, now.month, 1)
     end_date = datetime.date(now.year, now.month, mdays)
     studic = []
@@ -105,8 +109,7 @@ def send_report(emailto, subject_id):
     email.attach('pres.json', jsoncontent, 'application/json')
     email.attach_file(os.path.join(settings.MEDIA_ROOT, 'pres.xlsx'))
     email.send()
-    os.remove(os.path.join(settings.MEDIA_ROOT, 'pres.xlsx'))
-    pass
+    return 'task done at {}:{}'.format(now.hour, now.minute)
 
 
 @shared_task

@@ -91,3 +91,6 @@ ENV/
 
 media/
 migrations/
+
+# pid files
+*.pid
