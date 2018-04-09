@@ -25,7 +25,7 @@ def pres_create(request):
         subject = Subject.objects.get(id=request.POST['subject'])
         grade = [i.get('pk') for i in subject.grade.values('pk')]
         if subject.club is True:
-            students = Student.objects.filter(club__subject__id=subject.id)
+            students = Student.objects.filter(club=subject.id)
         else:
             students = Student.objects.filter(
                 grade__in=grade

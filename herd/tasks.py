@@ -27,29 +27,37 @@ def send_report():
         [
             'prof.igor@colegioinfante.info',
             'jorge@colegioinfante.info',
-            'secretariaph@gmail.com',
+            'secretariaph2012@gmail.com',
         ],
     )
-    subject = 20
-    subject = Subject.objects.get(pk__exact=subject)
-    grade = [pk.get('pk') for pk in subject.grade.values('pk')]
+    teacheruser = 395
+    subject = Subject.objects.filter(teacher__user=teacheruser)
+    grade = list()
+    for s in subject:
+        [grade.append(pk.get('pk')) for pk in s.grade.values('pk')]
     students = Student.objects.filter(
         grade__in=grade).order_by('number')
     now = datetime.datetime.now()
+    clear_rec_db(now.year, now.month, now.day)
     mdays = calendar.monthrange(now.year, now.month)[1]
     weekday = calendar.weekday(now.year, now.month, now.day)
     if mdays != now.day and weekday != 4:
         return 'not lastday, and not friday day: {}'.format(now.day)
-    elif mdays - now.day > 2:
+    if (mdays - now.day) > 2:
         return 'not last friday of the month, day: {}'.format(now.day)
-    elif now.hour != 10 and now.minute <= 10 or now.minute > 15:
+    if now.hour != 10:
+        return 'last friday but time is: {}:{}'.format(now.hour, now.minute)
+    if now.minute <= 10 or now.minute > 20:
         return 'last friday but time is: {}:{}'.format(now.hour, now.minute)
     start_date = datetime.date(now.year, now.month, 1)
     end_date = datetime.date(now.year, now.month, mdays)
     studic = []
     for student in students:
         pres = PresRec.objects.filter(
-            subject__exact=subject,
+            subject=Subject.objects.get(
+                name='secretaria',
+                grade=student.grade
+            ),
             student__user__exact=student.user,
             date__range=[
                 start_date,
@@ -57,7 +65,10 @@ def send_report():
             ],
             is_absent=0).count()
         absent = PresRec.objects.filter(
-            subject__exact=subject,
+            subject__exact=Subject.objects.get(
+                name='secretaria',
+                grade=student.grade
+            ),
             student__user__exact=student.user,
             date__range=[
                 start_date,
@@ -82,8 +93,8 @@ def send_report():
     columns = [
         (u'Número', 6, 'A'),
         (u'Nome', 25, 'B'),
-        (u'Presenças', 7, 'C'),
-        (u'Faltas', 7, 'D')
+        #(u'Presenças', 7, 'C'),
+        (u'Faltas', 7, 'C')
     ]
     for col_num in range(len(columns)):
         c = ws.cell(row=row_num + 1, column=col_num + 1)
@@ -95,7 +106,7 @@ def send_report():
         row = [
             e.get('number'),
             e.get('name'),
-            e.get('pres'),
+            #e.get('pres'),
             e.get('absent'),
         ]
         for col_num in range(len(row)):
@@ -110,6 +121,43 @@ def send_report():
     email.attach_file(os.path.join(settings.MEDIA_ROOT, 'pres.xlsx'))
     email.send()
     return 'task done at {}:{}'.format(now.hour, now.minute)
+
+
+def clear_rec_db(year, month, days):
+    teacheruser = 395
+    month = month
+    year = year
+    days = days
+    start_date = datetime.date(year, month, 1)
+    end_date = datetime.date(year, month, days)
+    subject = Subject.objects.filter(teacher__user=teacheruser)
+    grade = list()
+    for s in subject:
+        [grade.append(pk.get('pk')) for pk in s.grade.values('pk')]
+    students = Student.objects.filter(
+        grade__in=grade).order_by('number')
+    for student in students:
+        for edate in PresRec.objects.filter(
+            student__user__exact=student.user,
+            subject=Subject.objects.get(
+                name='secretaria',
+                grade=student.grade
+            ),
+            date__range=[
+                start_date,
+                end_date
+            ]
+        ).values_list('date', flat=True).distinct():
+            plist = PresRec.objects.filter(
+                student__user__exact=student.user,
+                subject=Subject.objects.get(
+                    name='secretaria',
+                    grade=student.grade
+                ),
+                date__exact=edate).values_list('id', flat=True)
+            plist = list(plist)[1:]
+            PresRec.objects.filter(pk__in=plist).delete()
+    return 0
 
 
 @shared_task

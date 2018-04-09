@@ -131,33 +131,64 @@ def get_print_url(request):
     else:
         end_date = datetime.date(now.year + 1, 7, 1)
         start_date = datetime.date(now.year, 9, 1)
-    p = PresRec.objects.filter(
-        subject__exact=subject,
-        date__range=(start_date, end_date)
-    ).order_by('-date')
     subject = Subject.objects.get(pk__exact=subject)
-    grade = Grade.objects.get(pk__exact=subject.grade.pk)
-    students = Student.objects.filter(
-        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    if subject.club is True:
+        students = Student.objects.filter(club=subject.id).order_by(
+            'user__first_name',
+            'user__last_name'
+        )
+    else:
+        grade = Grade.objects.get(pk__exact=subject.grade.first().pk)
+        students = Student.objects.filter(
+            grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    studic = []
+    # p = PresRec.objects.filter(
+    #     subject__exact=subject,
+    #     date__range=(start_date, end_date)
+    # ).order_by('-date')
+    counter = 0
     for student in students:
-        ws['A' + get_y(student.list_number - 1, 9)] = '{} {}'.format(
-            student.user.first_name, student.user.last_name)
-    for p in p:
-        if p.is_absent == 0:
-            pres = 'P'
-        elif p.is_absent == 1:
-            pres = 'F'
-        ws[get_x(p.date.day) + get_y(
-            p.student.list_number - 1,
-            p.date.month)] = pres
+        pres = PresRec.objects.filter(
+            subject=subject,
+            student__user__exact=student.user,
+            date__range=[
+                start_date,
+                end_date
+            ]
+        ).order_by('-date')
+        studic.append({
+                      'name': '{}'.format(student),
+                      'ws': 'A{}'.format((90 + (counter * 10) + counter + 2)),
+                      'pres': [{'ws': '{}{}'.format(get_x(p.date.day), get_y(counter, p.date.month)), 'pres': '{}'.format(p.get_is_absent_display())} for p in pres]
+                      })
+        counter += 1
+    # counter = 0
+    # for p in p:
+    #     if p.is_absent == 0:
+    #         pres = 'P'
+    #     elif p.is_absent == 1:
+    #         pres = 'F'
+    #     pre.append({
+    #                'ws': '{}{}'.format(
+    #                    get_x(p.date.day),
+    #                    get_y(counter, p.date.month)
+    #                ),
+    #                'pres': pres
+    #                })
+    for s in studic:
+        ws[s.get('ws')] = s.get('name')
+        for p in s['pres']:
+            ws[p.get('ws')] = p.get('pres')
+    # for p in pre:
+    #     ws[p.get('ws')] = p.get('pres')
     ws = wb['Folha1']
     fllogo = storage.open('logotipo.png', mode='rb')
     img = Image(fllogo)
     ws.add_image(img, 'L3')
-    ws['A35'] = '{}'.format(subject)
+    ws['A35'] = '{!s}'.format(subject)
     ws['A62'] = '{} {} / {}'.format(
         'Ano letivo de ', start_date.year, end_date.year)
-    filename = ''.join('{}.xlsx'.format(subject).split())
+    filename = ''.join('{!s}.xlsx'.format(subject).split())
     fs = FileSystemStorage()
     fs = fs.open(filename, mode='wb+')
     # This dont work properly
@@ -215,22 +246,32 @@ def get_presents(request):
         return render(request, 'blank.html')
     subject = request.GET.get('subject', None)
     subject = Subject.objects.get(pk__exact=subject)
-    grade = Grade.objects.get(pk__exact=subject.grade.pk)
-    students = Student.objects.filter(
-        grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    if subject.club is True:
+        students = Student.objects.filter(club=subject.id).order_by(
+            'user__first_name',
+            'user__last_name'
+        )
+    else:
+        grade = Grade.objects.get(pk__exact=subject.grade.first().pk)
+        students = Student.objects.filter(
+            grade__exact=grade).order_by('user__first_name', 'user__last_name')
+    # subject = Subject.objects.get(pk__exact=subject)
+    # grade = Grade.objects.get(pk__exact=subject.grade.pk)
+    # students = Student.objects.filter(
+    #     grade__exact=grade).order_by('user__first_name', 'user__last_name')
     subjtitle = str(subject)
     now = datetime.datetime.now()
-    if now.month < 12 and now.month > 8:
+    if now.month < 13 and now.month > 8:
         start_date = datetime.date(now.year, 9, 1)
         end_date = datetime.date(now.year, now.month, now.day)
     elif now.month < 3:
-        start_date = datetime.date(now.year - 1, now.month - 3, 1)
+        start_date = datetime.date(now.year, 1, 1)
         end_date = datetime.date(now.year, now.month, now.day)
     elif now.month > 6:
         start_date = datetime.date(now.year, 4, 1)
         end_date = datetime.date(now.year, 6, 30)
     else:
-        start_date = datetime.date(now.year, now.month - 3, 1)
+        start_date = datetime.date(now.year, now.month - 2, 1)
         end_date = datetime.date(now.year, now.month, now.day)
     studic = []
     for student in students:
@@ -251,7 +292,7 @@ def get_presents(request):
             ],
             is_absent=1).count()
         studic.append({
-                      'name': '{}'.format(student),
+                      'name': '{} - {}'.format(student, student.number),
                       'pres': pres,
                       'absent': absent,
                       'start_date': start_date,
